@@ -1,0 +1,19 @@
+.moviesMoreButton {
+  padding: 50px 0 80px 0;
+  text-align: center;
+}
+
+.moviesMoreButton_main {
+  padding: 11px 60px 9px;
+  background-color: #F4F4F4;
+  border: 0;
+  cursor: pointer;
+  width: 320px;
+}
+
+/* Phone */
+@media (max-width: 450px) {
+  .moviesMoreButton_main {
+    padding: 11px 20px 9px;
+  }
+}

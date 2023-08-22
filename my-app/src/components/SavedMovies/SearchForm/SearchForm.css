@@ -1,0 +1,143 @@
+.searchForm {
+  padding: 70px 70px 10px;
+}
+
+.searchForm__form {
+  display: flex;
+  border-radius: 9px;
+  background: #FFF;
+  box-shadow: 0px 3px 14px 0px rgba(0, 0, 0, 0.08);
+  height: 72px;
+  padding: 0px 30px 0 19px;
+  margin-bottom: 69px;
+}
+
+.searchForm__left-part {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-right: 19px;
+  width: 100%;
+}
+
+.searchForm__find {
+  background-image: url('../../../images/find.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 34px;
+  height: 34px;
+}
+
+.searchForm__film {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  height: 27px;
+  width: 100%;
+  border: 0;
+}
+
+.searchForm__subnit {
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+  background-image: url('../../../images/findBg.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  padding-right: 30px;
+}
+
+.searchForm__right-part {
+  display: flex;
+  align-items: center;
+}
+
+.searchForm__vertical-stroke {
+  background-image: url('../../../images/input__COLOR_stroke-3.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 1px;
+  height: 40px;
+  margin-right: 29px;
+}
+
+.searchForm__smalltumb {
+  background-image: url('../../../images/smalltumb.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+  margin-right: 14px;
+}
+
+.searchForm__short-films {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.searchForm__line {
+  margin: 0;
+  border: 1px solid #E8E8E8;
+}
+
+
+/* Tablet */
+@media (max-width: 769px) {
+  .searchForm {
+    padding: 80px 30px 10px;
+  }
+
+  .searchForm__form {
+    margin-bottom: 109px;
+  }
+
+  .searchForm__vertical-stroke {
+    margin-right: 14px;
+}
+}
+
+/* Phone */
+@media (max-width: 650px) {
+  .searchForm {
+    padding: 80px 10px 10px;
+  }
+
+  .searchForm__form {
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    border-radius: unset;
+    background: #fafafa;
+    box-shadow: none;
+    height: unset;
+    margin-bottom: 45px;
+    width: 100%;
+  }
+
+  .searchForm__left-part {
+    display: flex;
+    border-radius: 9px;
+    background: #FFF;
+    box-shadow: 0px 3px 14px 0px rgba(0, 0, 0, 0.08);
+    padding: 19px;
+    margin: 0 0 46px 0;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .searchForm__find {
+    display: none;
+  }
+  .searchForm__vertical-stroke {
+    display: none;
+  }
+
+  .searchForm__short-films {
+    font-size: 11px;
+  }
+}
