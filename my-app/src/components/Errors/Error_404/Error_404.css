@@ -1,11 +1,11 @@
 .error-404 {
+  margin: auto;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.error-404__header {
-  margin-top: 250px;
+  justify-content: center;
+  position: relative;
 }
 
 .error-404__title {
@@ -15,6 +15,7 @@
   font-size: 140px;
   font-weight: 400;
   box-sizing: border-box;
+  font-family: Inter;
 }
 
 .error-404__subtitle {
@@ -25,27 +26,35 @@
   font-weight: 400;
   box-sizing: border-box;
   margin-top: 9px;
+  font-family: Inter;
 }
 
 .error-404__back {
-  margin: 184px 0px 60px;
+  margin: 0;
   color: #3456F3;
   text-align: center;
   font-size: 14px;
   font-weight: 400;
   text-decoration: none;
   box-sizing: border-box;
+  position: absolute;
+  top: calc(100vh - 60px);
+  font-family: Inter;
 }
 
 /* Tablet */
 @media (max-width: 769px) {
-  .error-404__header {
-    margin: 410px 0px 5px;
+  .error-404__back {
+    top: calc(100vh - 230px);
   }
 }
 
 /* Phone */
 @media (max-width: 450px) {
+  .error-404 {
+    height: calc(100vh - 5px);
+  }
+
   .error-404__title {
     font-size: 80px;
   }
@@ -54,14 +63,9 @@
     margin-top: 15px;
   }
 
-  .error-404__header {
-    margin: 329px 0 0;
-}
-
   .error-404__subtitle {
     color: #000;
     text-align: center;
-    font-family: Inter;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -69,7 +73,9 @@
   }
 
   .error-404__back {
-    margin: 284px 0px 30px;
     font-size: 12px;
+    margin: 0;
+    font-size: 12px;
+    top: 95%;
   }
 }

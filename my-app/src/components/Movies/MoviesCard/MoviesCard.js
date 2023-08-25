@@ -16,217 +16,221 @@ import film14 from "../../../images/films/film_14.png";
 import film15 from "../../../images/films/film_15.png";
 import film16 from "../../../images/films/film_16.png";
 
-function MoviesCard() {
+function MoviesCard({
+  moviesCardButton,
+  moviesCardActiveButton,
+  moviesCardDeleteButton
+}) {
   return (
     <>
-      <div className="moviesCard__films">
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film1}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button type="button" aria-label="Фильм" className="moviesCard__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <div className={`${moviesCardButton} ${moviesCardDeleteButton}`}></div>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film2}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button className="moviesCardActive__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <button className={moviesCardActiveButton}></button>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film3}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button type="button" aria-label="Фильм" className="moviesCard__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <div className={`${moviesCardButton} ${moviesCardDeleteButton}`}></div>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film4}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button type="button" aria-label="Фильм" className="moviesCard__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <div className={`${moviesCardButton} ${moviesCardDeleteButton}`}></div>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film5}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button className="moviesCardActive__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <button className={moviesCardActiveButton}></button>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film6}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button type="button" aria-label="Фильм" className="moviesCard__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <div className={`${moviesCardButton} ${moviesCardDeleteButton}`}></div>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film7}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button type="button" aria-label="Фильм" className="moviesCard__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <div className={`${moviesCardButton} ${moviesCardDeleteButton}`}></div>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film8}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button className="moviesCardActive__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <button className={moviesCardActiveButton}></button>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film9}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button type="button" aria-label="Фильм" className="moviesCard__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <div className={`${moviesCardButton} ${moviesCardDeleteButton}`}></div>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film10}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button type="button" aria-label="Фильм" className="moviesCard__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <div className={`${moviesCardButton} ${moviesCardDeleteButton}`}></div>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film11}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button className="moviesCardActive__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <button className={moviesCardActiveButton}></button>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film12}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button type="button" aria-label="Фильм" className="moviesCard__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <div className={`${moviesCardButton} ${moviesCardDeleteButton}`}></div>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film13}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button className="moviesCardActive__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <button className={moviesCardActiveButton}></button>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film14}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button type="button" aria-label="Фильм" className="moviesCard__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <div className={`${moviesCardButton} ${moviesCardDeleteButton}`}></div>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film15}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button type="button" aria-label="Фильм" className="moviesCard__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <div className={`${moviesCardButton} ${moviesCardDeleteButton}`}></div>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
-      <div className="moviesCard__films">
+      </article>
+      <article className="movies-card__films">
         <img
-          className="moviesCard__film-img"
+          className="movies-card__film-img"
           src={film16}
           alt="33 слова о дизайне"
           lang="ru"
         ></img>
-        <div className="moviesCard__name">
-          <p className="moviesCard__film-title">33 слова о дизайне</p>
-          <button className="moviesCardActive__button"></button>
-          <p className="moviesCard__film-duration">1ч42м</p>
+        <div className="movies-card__name">
+          <h3 className="movies-card__film-title">33 слова о дизайне</h3>
+          <button className={moviesCardActiveButton}></button>
+          <p className="movies-card__film-duration">1ч42м</p>
         </div>
-      </div>
+      </article>
     </>
   );
 }

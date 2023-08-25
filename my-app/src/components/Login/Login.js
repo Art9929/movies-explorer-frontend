@@ -1,21 +1,29 @@
+import EnterWithForm from "../EnterWithForm/EnterWithForm";
 import "./Login.css";
-import "../Header/Header.css";
 
 function Login() {
+  function handleSubmit(e) {
+    // Запрещаем браузеру переходить по адресу формы
+    e.preventDefault();
+  }
+
   return (
     <main className="main">
-      <section className="login">
-        <div className="login__logo-position">
-          <a href="/" className="header__logo"></a>
-        </div>
-        <h3 className="login__title">Рады видеть!</h3>
-        <form method="post" name="login" action="#" className="login__form">
+      <EnterWithForm
+        title="Рады видеть!"
+        method="post"
+        onSubmit={handleSubmit}
+        buttonText="Войти"
+        text="Ещё не зарегистрированы?"
+        link="/signup"
+        textLink="Регистрация"
+      >
           <label className="login__label" for="email">E-mail</label>
           <input
             id="email"
             name="email"
             type="email"
-            placeholder="pochta@yandex.ru|"
+            placeholder="pochta@yandex.ru"
             className="login__input"
             minLength="2"
             maxLength="30"
@@ -32,18 +40,7 @@ function Login() {
             required
           />
           <span className="login__error"></span>
-          <button
-            aria-label="Войти"
-            type="submit"
-            className="login__button"
-          >
-            Войти
-          </button>
-        </form>
-        <p className="login__enter-text">Ещё не зарегистрированы?
-          <a href="/signup" className="login__enter">Регистрация</a>
-        </p>
-      </section>
+      </EnterWithForm>
     </main>
   );
 }

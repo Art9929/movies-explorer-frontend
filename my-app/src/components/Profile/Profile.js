@@ -1,10 +1,20 @@
 import './Profile.css';
+import { useState } from "react";
 
-function Profile({loggedIn, navigateMenu}) {
+function Profile() {
+
+  const [setEditProfileActive, setEditProfile] = useState("");
+
+  function openEditMenu() {
+    setEditProfile(setEditProfileActive => !setEditProfileActive);
+  }
+
+  const toggleMenuPopup = setEditProfileActive ? true : false;
+
   return (
     <main className='main'>
       <section className="profile">
-        <h3 className="profile__title">Привет, Имя!</h3>
+        <h1 className="profile__title">Привет, Имя!</h1>
         <form
           method="post"
           name="profile"
@@ -20,6 +30,7 @@ function Profile({loggedIn, navigateMenu}) {
             minLength="2"
             maxLength="30"
             required
+            disabled="disabled"
           />
         <div className="profile__line"></div>
         <input
@@ -31,10 +42,41 @@ function Profile({loggedIn, navigateMenu}) {
             minLength="2"
             maxLength="30"
             required
+            disabled="disabled"
           />
-          <button aria-label="Редактировать" type="submit" className="profile__edit">Редактировать</button>
+          { toggleMenuPopup === true &&
+          <>
+            <span
+              className="profile__error"
+              // className="profile__error profile__error_visible"
+              >
+                При обновлении профиля произошла ошибка.
+            </span>
+            <button
+              aria-label="Редактировать"
+              type="submit"
+              className="profile__edit profile__edit_active hover__button"
+              // className="profile__edit profile__edit_active profile__edit_disabled"
+              disabled="disabled"
+              >
+                Сохранить
+            </button>
+          </>
+          }
         </form>
-        <a href="/signin"  className="profile__exit">Выйти из аккаунта</a>
+        { toggleMenuPopup === false &&
+        <>
+          <button
+            aria-label="Редактировать"
+            type="submit"
+            className="profile__edit hover__button"
+            onClick={openEditMenu}
+            >
+              Редактировать
+          </button>
+          <a href="/signin"  className="profile__exit">Выйти из аккаунта</a>
+        </>
+        }
       </section>
     </main>
   );

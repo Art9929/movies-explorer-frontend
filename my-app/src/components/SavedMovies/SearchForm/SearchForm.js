@@ -2,34 +2,33 @@ import "./SearchForm.css";
 
 function SearchForm() {
   return (
-    <section className="searchForm">
+    <section className="search-form">
       <form
         method="post"
         name="popup-form"
         action="#"
-        className="searchForm__form"
+        className="search-form__form"
       >
-        <div className="searchForm__left-part">
-          <i className="searchForm__find"></i>
+        <div className="search-form__left-part">
           <input
             id="name-film"
             name="film"
             type="text"
             placeholder="Фильм"
-            className="searchForm__film"
+            className="search-form__film"
             minLength="2"
             maxLength="30"
             required
           ></input>
-          <button aria-label="Поиск" type="submit" className="searchForm__subnit"></button>
+          <button aria-label="Поиск" type="submit" className="search-form__subnit"></button>
         </div>
-        <div className="searchForm__right-part">
-          <i className="searchForm__vertical-stroke"></i>
-          <i className="searchForm__smalltumb"></i>
-          <p className="searchForm__short-films">Короткометражки</p>
+        <div className="search-form__right-part">
+          <i className="search-form__vertical-stroke"></i>
+          <i className="search-form__smalltumb"></i>
+          <p className="search-form__short-films">Короткометражки</p>
         </div>
       </form>
-      <hr className="searchForm__line"></hr>
+      <hr className="search-form__line"></hr>
     </section>
   );
 }

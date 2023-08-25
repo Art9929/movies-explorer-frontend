@@ -1,10 +1,18 @@
 import "./MoviesCardList.css";
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-function MoviesCardList() {
+function MoviesCardList({
+  moviesCardButton,
+  moviesCardActiveButton,
+  moviesCardDeleteButton
+}) {
   return (
-    <section className="moviesCardList">
-       <MoviesCard></MoviesCard>
+    <section className="movies-card-list">
+       <MoviesCard
+          moviesCardButton={moviesCardButton}
+          moviesCardActiveButton={moviesCardActiveButton}
+          moviesCardDeleteButton={moviesCardDeleteButton}
+       />
     </section>
   );
 }
