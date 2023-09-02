@@ -1,25 +1,21 @@
 import EnterWithForm from "../EnterWithForm/EnterWithForm";
 import "./Register.css";
 
-function Register() {
-
-  function handleSubmit(e) {
-    // Запрещаем браузеру переходить по адресу формы
-    e.preventDefault();
-  }
+function Register({handleChange, handleSubmit, values, errors, isValidForm}) {
 
   return (
     <main className="main">
       <EnterWithForm
         title="Добро пожаловать!"
         method="post"
-        onSubmit={handleSubmit}
         buttonText="Зарегистрироваться"
         text="Уже зарегистрированы?"
         link="/signin"
         textLink="Войти"
+        handleSubmit={handleSubmit}
+        isValidForm={isValidForm}
       >
-        <label className="register__label" for="name">
+        <label className="register__label" htmlFor="name">
           Имя
         </label>
         <input
@@ -31,9 +27,11 @@ function Register() {
           minLength="2"
           maxLength="30"
           required
+          value={values.name || ""}
+          onChange={handleChange}
         />
-        <span className="register__error"></span>
-        <label className="register__label" for="email">
+        <span className="register__error">{errors.name}</span>
+        <label className="register__label" htmlFor="email">
           E-mail
         </label>
         <input
@@ -45,9 +43,11 @@ function Register() {
           minLength="2"
           maxLength="30"
           required
+          value={values.email || ""}
+          onChange={handleChange}
         />
-        <span className="register__error"></span>
-        <label className="register__label" for="password">
+        <span className="register__error">{errors.email}</span>
+        <label className="register__label" htmlFor="password">
           Пароль
         </label>
         <input
@@ -56,9 +56,13 @@ function Register() {
           type="password"
           placeholder="Пароль"
           className="register__input"
+          minLength="6"
+          maxLength="30"
           required
+          value={values.password || ""}
+          onChange={handleChange}
         />
-        <span className="register__error"></span>
+        <span className="register__error">{errors.password}</span>
       </EnterWithForm>
     </main>
   );

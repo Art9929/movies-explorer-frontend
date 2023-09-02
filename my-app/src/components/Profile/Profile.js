@@ -1,63 +1,78 @@
 import './Profile.css';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function Profile() {
+function Profile({currentUser, handleSubmit, handleChange, values, errors, isValidForm, errorProfile, logOut}) {
 
+  // Изменение кнопки редактирования при нажатии
   const [setEditProfileActive, setEditProfile] = useState("");
-
   function openEditMenu() {
     setEditProfile(setEditProfileActive => !setEditProfileActive);
   }
-
   const toggleMenuPopup = setEditProfileActive ? true : false;
+
+// Валидация
+  const [isValidBtn, setisValidBtn] = useState("enter-with-form__edit_disabled");
+  const [isDisabledBtn, setIsDisabledBtn] = useState("disabled", "disabled");
+
+  useEffect(() => {
+    if(isValidForm) {setisValidBtn(''); setIsDisabledBtn('')} else { setisValidBtn("profile__edit_disabled"); setIsDisabledBtn("disabled", "disabled") }
+  }, [isValidForm])
 
   return (
     <main className='main'>
       <section className="profile">
-        <h1 className="profile__title">Привет, Имя!</h1>
+        <h1 className="profile__title">Привет, {currentUser.name}</h1>
         <form
-          method="post"
+          method="PATCH"
           name="profile"
           action="#"
           className="profile__form"
+          onSubmit={handleSubmit}
+          noValidate
         >
+        <label className="profile__label" htmlFor="name">
+          Имя
+        </label>
         <input
             id="name"
             name="name"
             type="text"
-            placeholder="Имя"
+            placeholder={currentUser.name}
             className="profile__input"
             minLength="2"
             maxLength="30"
             required
-            disabled="disabled"
+            value={values.name || ""}
+            onChange={handleChange}
           />
+        <span className="profile__error">{errors.name}</span>
         <div className="profile__line"></div>
+        <label className="profile__label" htmlFor="name">
+        email
+        </label>
         <input
             id="email"
             name="email"
             type="email"
-            placeholder="E-mail"
+            placeholder={currentUser.email}
             className="profile__input"
             minLength="2"
             maxLength="30"
             required
-            disabled="disabled"
+            value={values.email || ""}
+            onChange={handleChange}
           />
+        <span className="profile__error">{errors.email}</span>
           { toggleMenuPopup === true &&
           <>
-            <span
-              className="profile__error"
-              // className="profile__error profile__error_visible"
-              >
+            <span className={`profile__error profile__error_active ${errorProfile}`} >
                 При обновлении профиля произошла ошибка.
             </span>
             <button
-              aria-label="Редактировать"
+              aria-label="Сохранить"
               type="submit"
-              className="profile__edit profile__edit_active hover__button"
-              // className="profile__edit profile__edit_active profile__edit_disabled"
-              disabled="disabled"
+              className={`profile__edit profile__edit_active hover__button ${isValidBtn}`}
+              disabled={isDisabledBtn}
               >
                 Сохранить
             </button>
@@ -74,7 +89,14 @@ function Profile() {
             >
               Редактировать
           </button>
-          <a href="/signin"  className="profile__exit">Выйти из аккаунта</a>
+          <button
+            aria-label="Выйти из аккаунта"
+            type="button"
+            className="profile__exit hover__button"
+            onClick={logOut}
+            >
+              Выйти из аккаунта
+          </button>
         </>
         }
       </section>

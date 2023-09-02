@@ -1,33 +1,44 @@
 import "./EnterWithForm.css";
 import "../Header/Header.css";
+import { useState, useEffect} from "react";
 
-function EnterWithForm({ children, title, method, buttonText, onSubmit, text, link, textLink }) {
+function EnterWithForm({ children, title, method, buttonText, text, link, textLink, handleSubmit, isValidForm}) {
+
+  const [isValidBtn, setisValidBtn] = useState("enter-with-form__edit_disabled");
+  const [isDisabledBtn, setIsDisabledBtn] = useState("disabled", "disabled");
+
+  useEffect(() => {
+    if(isValidForm) {setisValidBtn(''); setIsDisabledBtn('')} else { setisValidBtn("register__edit_disabled"); setIsDisabledBtn("disabled", "disabled") }
+  }, [isValidForm])
+
   return (
-    <section className="enter-width-form">
-      <div className="enter-width-form__logo-position">
-        <a href="/" className="header__logo"></a>
+    <section className="enter-with-form">
+      <div className="enter-with-form__logo-position">
+        <a href="/" className="header__logo hover__button"></a>
       </div>
-      <h1 className="enter-width-form__title">{title}</h1>
+      <h1 className="enter-with-form__title">{title}</h1>
       <form
         method={method}
-        name=""
+        name="register"
         action="#"
-        className="enter-width-form__form"
-        onSubmit={onSubmit}
+        className="enter-with-form__form"
+        onSubmit={handleSubmit}
+        noValidate
       >
         {children}
         <button
           aria-label={buttonText}
           type="submit"
-          className="enter-width-form__button hover__button"
+          className={`enter-with-form__button hover__button ${isValidBtn} `}
+          disabled={isDisabledBtn}
         >
           {buttonText}
         </button>
       </form>
 
-      <p className="enter-width-form__enter-text">
+      <p className="enter-with-form__enter-text">
         {text}
-        <a href={link} className="enter-width-form__enter hover__link-blue">
+        <a href={link} className="enter-with-form__enter hover__link">
           {textLink}
         </a>
       </p>
