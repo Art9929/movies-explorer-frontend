@@ -34,5 +34,7 @@
   6. Mongodb
   7. Node.js / Express
 
-Макет : light-3.fig
-[Ссылка на сайт](https://api.a-ryabcev-films.nomoreparties.co)
+Макет : light-3.fig | https://www.figma.com/file/X4WyTfJU4EOis2G2AJeZtP/light-3?node-id=41057%3A3221&mode=dev
+
+Пул реквест: https://github.com/Art9929/movies-explorer-frontend/pull/2
+[Ссылка на сайт](https://a-ryabcev-films.nomoreparties.co/)

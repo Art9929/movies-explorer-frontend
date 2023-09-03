@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { Route, Routes, Outlet, Navigate, useNavigate } from "react-router-dom";
+import { Route, Routes, Outlet, useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/CurrentUserContext"; // Контекст
 
 // pages-components
@@ -22,19 +22,18 @@ import MoviesCard from "../MoviesCard/MoviesCard";
 import MoviesCardFilter from "../MoviesCardFilter";
 import MoviesMoreButton from "../MoviesMoreButton/MoviesMoreButton";
 import SavedMovies from "../SavedMovies/SavedMovies";
-import SaveMoviesMoreButton from "../SaveMoviesMoreButton/SaveMoviesMoreButton";
 import ProtectedRoute from "../ProtectedRoute";
 // ther Pages
 import Profile from "../Profile/Profile";
 import Login from "../Login/Login";
 import Register from "../Register/Register";
-import Error_404 from "../Errors/Error_404/Error_404";
+import PageNotFound from "../Errors/Error_404/Error_404";
 import Footer from "../Footer/Footer";
 // utills
 import * as auth from "../utils/auth";
 import api from "../utils/MoviesApi.js";
 // hooks
-import { useForm, useFormWithValidation } from "../hooks/Validation";
+import { useFormWithValidation } from "../hooks/Validation";
 import RenderCountCard from "../RenderCountCard";
 
 function App() {
@@ -61,19 +60,19 @@ function App() {
   }
 
 const token = localStorage.jwt;
-
-// // Проверка токена
+// Проверка токена
   useEffect(() => {
     auth
       .checkToken()
       .then((res) => { setLoggedIn(true); })
-      .catch((err) => {setLoggedIn(false); console.error(err) });
+      .catch((err) => {setLoggedIn(false); console.error(err)});
   }, [])
+
 
   // Загрузка страницы
   useEffect(() => {
     if (loggedIn) {
-      api
+      auth
         .profile()  // Профиль
         .then((data) => {
           setCurrentUser(data);
@@ -118,7 +117,6 @@ const token = localStorage.jwt;
     auth
       .authorize(values.email, values.password)
       .then((data) => {
-        console.log(data);
         if (data.token) {
           setValues({ email: "", password: "" });
           setLoggedIn(true);
@@ -133,11 +131,12 @@ const token = localStorage.jwt;
 // Редактирование профиля
 const handleUpdateUser = (e) => {
   e.preventDefault();
-  api.editProfile(values)
-  .then((info) => {
-    setCurrentUser(info);
-    resetForm()
-    seterrorProfile("");
+  auth
+  .editProfile(values)
+    .then((info) => {
+      setCurrentUser(info);
+      resetForm()
+      seterrorProfile("");
   })
   .catch((err) => { seterrorProfile(handleProfileErrorNone); setIsValid(false); console.error(err) });
 }
@@ -152,27 +151,13 @@ const handleSubmitSerach = (e) => {
       api
         .getInitialCards()
         .then((data) => {
-          if (data) {
-          const search = values.movies.toLowerCase().trim();
+          setCards(data)
+          setMoviesMoreBtn(true)
+        })
 
-          const searchTrue = data.map(card => {
-            <div key={'card.id'}></div>
-            return (
-            ( card.nameRU.toLowerCase().trim().indexOf(search) > -1 )
-            ||
-            ( card.nameEN.toLowerCase().trim().indexOf(search) > -1 ) )
-            ?
-            card
-            :
-            false;
-        });
-        setCards(searchTrue)
-        // console.log(searchTrue);
-        // & setMoviesMoreBtn(true)
-        }
-      })
     .catch((err) => console.error(err));
   };
+
 
  // Лайк и сохранение карточки
  function handleAddCardSubmit(card) {
@@ -193,7 +178,6 @@ const handleSubmitSerach = (e) => {
  function handleDeleteCardSubmit(card) {
   api.deleteCard(card._id)
   .then((data) => {
-    console.log(data);
     setSaveCards((results) => results.filter((c) => c._id !== card._id ? data : data - c));
   })
   .catch((err) => console.error(err));
@@ -214,7 +198,6 @@ const logOut = () => {
 
   return (
     <div className="App">
-      {loggedIn}
       <Routes>
         <Route
           element={
@@ -237,122 +220,126 @@ const logOut = () => {
               />
             }
           />
+            <>
+              <Route
+                path="/movies"
+                element={
+                  <>
+                    <ProtectedRoute
+                      token={token}
+                      loggedIn={loggedIn}
+                      element={
+                        <UserContext.Provider value={currentUser}>
+                          <Movies
+                            searchForm={
+                              <SearchForm
+                              handleSubmit={(e) => handleSubmitSerach(e)}
+                              handleChange={handleChange}
+                              values={values}
+                              shortFilmsAction={shortFilmsAction}
+                              />}
 
-          <Route
-            path="/movies"
-            element={
-              <>
-                <ProtectedRoute
-                  token={token}
-                  element={
-                    <UserContext.Provider value={currentUser}>
-                      <Movies
-                        searchForm={
-                          <SearchForm
+                              moviesCardList={
+                              <MoviesCardList
+                              moviesCardFilter={cards
+                                ?.slice(0, roundedVisibleCardCount)
+                                .map((card) => (
+                                  <MoviesCardFilter
+                                        key={card.id}
+                                        card={card}
+                                        values={values.movies}
+                                        ShortFilmsClick={ShortFilmsClick}
+                                        moviesCard={
+                                        <MoviesCard
+                                          card={card}
+                                          moviesLikeCardButton={() => handleAddCardSubmit(card)}
+                                        />}
+                                    />
+                                  ))}
+                              />
+                            }
+                            moviesMoreButton={
+                              <MoviesMoreButton moviesMoreBtn={moviesMoreBtn} handleClick={handleClick} />
+                            }
+                            footer={<Footer />}
+                          />
+                        </UserContext.Provider>
+                      }
+                    />
+                  </>
+                }
+              />
+              <Route
+                path="/savemovies"
+                element={
+                  <>
+                    <ProtectedRoute
+                      token={token}
+                      element={
+                        <UserContext.Provider value={currentUser}>
+                          <SavedMovies
+                          searchForm={
+                            <SearchForm
                             handleSubmit={(e) => handleSubmitSerach(e)}
                             handleChange={handleChange}
                             values={values}
                             shortFilmsAction={shortFilmsAction}
-                            />}
-
-                        moviesCardList={
-                          <MoviesCardList
-                            moviesCardFilter={cards
-                              ?.slice(0, roundedVisibleCardCount)
-                              .map((card) => (
-                                <MoviesCardFilter
-                                    key={card.id}
-                                    card={card}
-                                    ShortFilmsClick={ShortFilmsClick}
-                                    moviesCard={
-                                    <MoviesCard
-                                      card={card}
-                                      moviesLikeCardButton={() => handleAddCardSubmit(card)}
-                                    />}
-                                />
-                              ))}
+                            /> }
+                            moviesCardList={
+                              <MoviesCardList
+                                moviesCardFilter={saveCards
+                                  ?.slice(0, roundedVisibleCardCount)
+                                  .map((card) => (
+                                    <MoviesCardFilter
+                                        key={card.nameRU}
+                                        card={card}
+                                        values={values.movies}
+                                        ShortFilmsClick={ShortFilmsClick}
+                                        moviesCard={
+                                        <MoviesCard
+                                          card={card}
+                                          moviesLikeCardButton={() => handleDeleteCardSubmit(card)}
+                                          disLikeBtnCard={disLikeBtnCard}
+                                        />}
+                                    />
+                                  ))}
+                              />
+                            }
+                          footer={<Footer />}
                           />
-                        }
-                        moviesMoreButton={
-                          <MoviesMoreButton moviesMoreBtn={setMoviesMoreBtn} handleClick={handleClick} />
-                        }
-                        footer={<Footer />}
-                      />
-                    </UserContext.Provider>
-                  }
-                />
-              </>
-            }
-          />
-          <Route
-            path="/savemovies"
-            element={
-              <>
-                <ProtectedRoute
-                  token={token}
-                  element={
-                    <UserContext.Provider value={currentUser}>
-                      <SavedMovies
-                      searchForm={
-                        <SearchForm
-                        handleSubmit={(e) => handleSubmitSerach(e)}
-                        handleChange={handleChange}
-                        values={values}
-                        shortFilmsAction={shortFilmsAction}
-                        /> }
-                        moviesCardList={
-                          <MoviesCardList
-                            moviesCardFilter={saveCards
-                              .map((card) => (
-                                <MoviesCardFilter
-                                    key={card.id}
-                                    card={card}
-                                    ShortFilmsClick={ShortFilmsClick}
-                                    moviesCard={
-                                    <MoviesCard
-                                      card={card}
-                                      moviesLikeCardButton={() => handleDeleteCardSubmit(card)}
-                                      disLikeBtnCard={disLikeBtnCard}
-                                    />}
-                                />
-                              ))}
-                          />
-                        }
-                      footer={<Footer />}
-                      />
-                    </UserContext.Provider>
-                  }
-                />
-              </>
-            }
-          />
+                        </UserContext.Provider>
+                      }
+                    />
+                  </>
+                }
+              />
 
-          <Route
-            path="/profile"
-            element={
-              <>
-                <ProtectedRoute
-                  token={token}
-                  element={
-                    <UserContext.Provider value={currentUser}>
-                      <Profile
-                        handleSubmit={(e) => handleUpdateUser(e)}
-                        handleChange={(e) => handleChange(e)}
-                        values={values}
-                        errors={errors}
-                        isValidForm={isValid}
-                        logOut={logOut}
-                        currentUser={currentUser}
-                        errorProfile={errorProfile}
-                      />
-                    </UserContext.Provider>
-                  }
+              <Route
+                path="/profile"
+                element={
+                  <>
+                    <ProtectedRoute
+                      token={token}
+                      element={
+                        <UserContext.Provider value={currentUser}>
+                          <Profile
+                            handleSubmit={(e) => handleUpdateUser(e)}
+                            handleChange={(e) => handleChange(e)}
+                            values={values}
+                            errors={errors}
+                            isValidForm={isValid}
+                            logOut={logOut}
+                            currentUser={currentUser}
+                            errorProfile={errorProfile}
+                          />
+                        </UserContext.Provider>
+                      }
+                    />
+                  </>
+                }
                 />
-              </>
-            }
-          />
+            </>
         </Route>{/*header*/}
-
         <Route
           path="/signup"
           element={
@@ -377,7 +364,7 @@ const logOut = () => {
             />
           }
         />
-        <Route path="*" element={<Error_404 />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
       {/*Routes*/}
     </div> // App

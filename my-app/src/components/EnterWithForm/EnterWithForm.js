@@ -14,7 +14,7 @@ function EnterWithForm({ children, title, method, buttonText, text, link, textLi
   return (
     <section className="enter-with-form">
       <div className="enter-with-form__logo-position">
-        <a href="/" className="header__logo hover__button"></a>
+        <a href="/" className="header__logo hover__button"> </a>
       </div>
       <h1 className="enter-with-form__title">{title}</h1>
       <form

@@ -44,7 +44,7 @@ function navigateMenu() {
     <header className={`header ${loggedIn ? "header_theme_white" : "header_theme_gray"}`}>
         <div className={`header__menu ${toggleMenuPopup}`}>
           <div className="header__wrapper-logo">
-            <a href="/" className="header__logo hover__button"></a>
+            <a href="/" className="header__logo hover__button"> </a>
           </div>
       {loggedIn ? (
         <div className="header__wrapper">
