@@ -59,5 +59,5 @@ export default function RenderCountCard() {
     setVisibleCardCount(visibleCardCount + SM_ROW_CARD_COUNT);
   };
 
-  return ( {roundedVisibleCardCount, handleClick} );
+  return ( {roundedVisibleCardCount, handleClick, visibleCardCount} );
 };

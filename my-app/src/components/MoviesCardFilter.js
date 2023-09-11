@@ -1,30 +1,13 @@
-function MoviesCardFilter({ card, values, ShortFilmsClick, moviesCard }) {
-if (values) {
-  function filterSearch(card) {
-    const search = values.toLowerCase().trim();
-    if (
-      card.nameRU.toLowerCase().trim().indexOf(search) > -1 ||
-      card.nameEN.toLowerCase().trim().indexOf(search) > -1
-    ) {
-      return card;
-    } else {
-      return false;
-    }
-  }
+function MoviesCardFilter({ card, values, moviesCard }) {
+  if (values === "") return
 
-  card = filterSearch(card);
-  if (card === false ) return
-}
+  const search = (values || '').toLowerCase().trim();
 
-  const filterMoviesCard = (card) => {
-    if (card.duration < 40) {
-      return <>{moviesCard}</>;
-    } else {
-      return "";
-    }
-  };
+if (
+  card.nameRU.toLowerCase().trim().indexOf(search) > -1 ||
+  card.nameEN.toLowerCase().trim().indexOf(search) > -1
+) return <>{moviesCard}</>;
 
-  return ShortFilmsClick ? filterMoviesCard(card) : <>{moviesCard}</>;
 }
 
 export default MoviesCardFilter;

@@ -39,37 +39,55 @@ import RenderCountCard from "../RenderCountCard";
 function App() {
   // functions
   const { values, handleChange, setValues, errors, isValid, setIsValid, resetForm} = useFormWithValidation();
-  const { roundedVisibleCardCount, handleClick } = RenderCountCard();
+  const { roundedVisibleCardCount, handleClick, visibleCardCount } = RenderCountCard();
   // useState
   const [loggedIn, setLoggedIn] = useState(null); // 3 разделения - null, false, true
   const [currentUser, setCurrentUser] = useState({});
   const navigate = useNavigate();
   const [cards, setCards] = useState([]); // Фильмы со стороннего сервера
+  const [search, setSearch] = useState(""); // Сохраняем фильмы для возврата значения setCards после фильтрации
+  const [saveSearch, setSaveSearch] = useState(""); // Сохраняем фильмы для возврата значения setCards после фильтрации
   const [saveCards, setSaveCards] = useState([]); // Фильмы с Моего сервера
-  const [ShortFilmsClick, setShortFilmsClick] = useState(null); // Короткометражки
+  const [saveCardsNoFileter, setSaveCardsNoFileter] = useState([]); // Неотфильтрованные фильмы с Моего сервера
+  const [shortFilmsClick, setShortFilmsClick] = useState(null); // class checked для "Короткометражки для фильмов"
+  const [shortSaveFilmsClick, setShortSaveFilmsClick] = useState(null); // class checked для "Короткометражки для сохраненных фильмов"
   const [moviesMoreBtn, setMoviesMoreBtn] = useState(null); // Короткометражки
-  const [disLikeBtnCard, setdisLikeBtnCard] = useState(""); // Кнопка Лайка Карточки
   const [errorProfile, seterrorProfile] = useState(""); // Ошибка обновления профиля
+  const [countCards, setCountCards] = useState(0); // Подсчёт карточек с фильмами
+  const [isLoading, setIsLoading] = useState(null); //Прелоадер
+  const [serverError, setserverError] = useState(null); // Ошибка соединения
+  const [isAppMounted , setIsAppMounted ] = useState(null); // Ошибка соединения
 
-  function handleLikeBtnCard() {
-    return "movies-card-delete__button";
-  }
+  const handleDisLikeBtnCard = "movies-card-delete__button";
 
   function handleProfileErrorNone() {
     return "profile__display-block";
   }
 
-const token = localStorage.jwt;
-// Проверка токена
-  useEffect(() => {
+const tokenFilms = JSON.parse(window.localStorage.getItem('films'))
+const tokenSaveFilms = JSON.parse(window.localStorage.getItem('saveFilms'))
+
+// Проверка токенов
+  useEffect((token) => {
+    // Токен регистрации
     auth
-      .checkToken()
-      .then((res) => { setLoggedIn(true); })
-      .catch((err) => {setLoggedIn(false); console.error(err)});
+    .checkToken(token)
+    .then((res) => {setLoggedIn(true); setIsAppMounted (true)})
+    .catch((err) => {setLoggedIn(false); console.error(err); setIsAppMounted (true)});
+    // Токен загрузки фильмов в НЕпустом инпуте
+    if (tokenFilms?.btn === true) {
+      setCards(tokenFilms.shortFilmsCards); // закладываем отфильтрованный список при условии наличия токена и вкл фильтра
+      setShortFilmsClick(tokenFilms?.btn); // включаем фильтр явно
+      setSearch(tokenFilms?.search); // включаем фильтр явно
+    } else if (tokenFilms) {
+      setCards(tokenFilms.cardsNoFilter); // закладываем отфильтрованный список при условии наличия токена и вкл фильтра
+      setSearch(tokenFilms.search); // закладываем отфильтрованный список при условии наличия токена и вкл фильтра
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-
   // Загрузка страницы
+
   useEffect(() => {
     if (loggedIn) {
       auth
@@ -82,24 +100,48 @@ const token = localStorage.jwt;
         api
           .getInitialSaveCards()  // Сохраненные фильмы
           .then((data) => {
-            setSaveCards(data);
-            setdisLikeBtnCard(handleLikeBtnCard)
-            // console.log(saveCards);
+            setSaveCardsNoFileter(Array.from(data))
+            // Токен загрузки сохраненных фильмов в НЕпустом инпуте
+            if (tokenSaveFilms?.btn === true) {
+              setSaveCards(tokenSaveFilms.shortFilmsCards); // закладываем отфильтрованный список при условии наличия токена и вкл фильтра
+              setShortSaveFilmsClick(tokenSaveFilms.btn); // включаем фильтр явно
+              setSaveSearch(tokenSaveFilms?.search); // включаем фильтр явно
+            } else if (tokenSaveFilms && tokenSaveFilms.search === "") {
+              setShortSaveFilmsClick(tokenSaveFilms.btn); // включаем фильтр явно
+              setSaveCards(data); // закладываем отфильтрованный список при условии наличия токена и вкл фильтра
+            } else if (tokenSaveFilms && tokenSaveFilms?.search !== "") {
+              console.log(3);
+              setSaveCards(tokenSaveFilms.cardsFilter); // закладываем отфильтрованный список при условии наличия токена и вкл фильтра
+              setSaveSearch(tokenSaveFilms.search); // закладываем отфильтрованный список при условии наличия токена и вкл фильтра
+            } else {
+              console.log(4);
+            setSaveCards(Array.from(data));
+            const localStorageArray = {'search' : "", 'cardsNoFilter' : Array.from(data), 'cardsFilter' : {}, 'shortFilmsCards': {}, 'btn' : null};
+            window.localStorage.setItem('saveFilms', JSON.stringify(localStorageArray) );
+          }
           })
           .catch((err) => console.error(err));
-    }
-  }, [loggedIn]);
+
+        }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [loggedIn]);
 
 
-  // Загрузка короткометражек
-  const shortFilmsAction = () => {
-    ShortFilmsClick ? setShortFilmsClick(false) : setShortFilmsClick(true)
-  }
+      // Кнопка "Еще"
+  useEffect(() => {
+    if (countCards) {
+      countCards < 12 ? setMoviesMoreBtn(false) : setMoviesMoreBtn(true)
+    }}, [countCards]);
+
+  useEffect(() => {
+    countCards < visibleCardCount && setMoviesMoreBtn(false);
+// eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [visibleCardCount]);
+
 
   // Регистрация
   const handleSubmitRegistrate = (e) => {
     e.preventDefault();
-    console.log(values.name);
     auth
       .signup(values.name, values.email, values.password)
       .then((res) => {
@@ -141,22 +183,88 @@ const handleUpdateUser = (e) => {
   .catch((err) => { seterrorProfile(handleProfileErrorNone); setIsValid(false); console.error(err) });
 }
 
-
 // Поиск фильма
-const handleSubmitSerach = (e) => {
-    e.preventDefault();
-    if (!values.movies) {
-      return;
-    }
+const handleSubmitSerach = (search) => {
+  if (search === "") setCards(null);
+    if (search) {
+      setSearch(search)
+      const searchCards = search.toLowerCase().trim();
+      setIsLoading(true); // прелоадер
       api
-        .getInitialCards()
-        .then((data) => {
+      .getInitialCards()
+      .then((cards) => {
+        const data = cards.filter(card =>
+          card.nameRU.toLowerCase().trim().indexOf(searchCards) > -1 ||
+          card.nameEN.toLowerCase().trim().indexOf(searchCards) > -1)
           setCards(data)
-          setMoviesMoreBtn(true)
-        })
+          setCountCards(data.length);
 
-    .catch((err) => console.error(err));
-  };
+          const localStorageArray = {'search' : search, 'cardsNoFilter' : data, 'shortFilmsCards': {}, 'btn' : null};
+          window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
+        })
+      .catch((err) => err && ( console.error(err), setserverError(true), setMoviesMoreBtn(false) ) )
+      .finally(() => setIsLoading(false));
+}}
+
+// Поиск Сохраненного фильма
+const handleSubmitSaveSerach = (saveSearch) => {
+  if (saveSearch === "") setSaveCards(saveCardsNoFileter);
+    if (saveSearch) {
+      setSaveSearch(saveSearch)
+      const searchSaveCards = saveSearch.toLowerCase().trim();
+      setIsLoading(true); // прелоадер
+      try {
+        const data = saveCardsNoFileter.filter(card =>
+          card.nameRU.toLowerCase().trim().indexOf(searchSaveCards) > -1 ||
+          card.nameEN.toLowerCase().trim().indexOf(searchSaveCards) > -1)
+          setSaveCards(data)
+          const localStorageArray = {'search' : saveSearch, 'cardsNoFilter' : saveCardsNoFileter, 'cardsFilter' : data, 'shortFilmsCards': {}, 'btn' : null};
+          window.localStorage.setItem('saveFilms', JSON.stringify(localStorageArray) );
+        }
+        catch (err) { console.error(err); setserverError(true); }
+        finally { setIsLoading(false); };
+}}
+
+  // Короткометражки в Фильмах
+  const shortFilmsAction = () => {
+    if (shortFilmsClick) {
+      if (cards && tokenFilms){
+        setCards(tokenFilms.cardsNoFilter) // возвращаем исходное значение карточек через cardsFilter
+        setCountCards(cards.length);
+        setSearch(tokenFilms.search)
+        setShortFilmsClick(false)
+        const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'shortFilmsCards': {}, 'btn' : false};
+        window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
+      }
+    } else if (cards && tokenFilms) {
+      const cardsNoFilter = cards;
+      const  data = cards.filter(card => card.duration < 40)
+      setCards(data)
+      setCountCards(data.length); // Для кнопки "Ещё"
+      setSearch(tokenFilms.search)
+      setShortFilmsClick(true)
+      // записываем рзультат в jwt токен
+      const localStorageArray = {'search' : search, 'cardsNoFilter' : cardsNoFilter, 'shortFilmsCards': data, 'btn' : true};
+      window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
+    }
+  }
+
+  // Короткометражки в Сохраненных Фильмах
+  const shortSaveFilmsAction = () => {
+    if (saveCards && !shortSaveFilmsClick) {
+        const data = saveCards.filter(card => card.duration < 40)
+        setSaveCards(data)
+        setShortSaveFilmsClick(true)
+        const localStorageArray = {'search' : saveSearch, 'cardsNoFilter' : saveCardsNoFileter, 'cardsFilter' : data, 'shortFilmsCards': data, 'btn' : true};
+        window.localStorage.setItem('saveFilms', JSON.stringify(localStorageArray) );
+      } else if (saveCards && shortSaveFilmsClick) {
+        setSaveCards(saveCardsNoFileter)
+        setShortSaveFilmsClick(false)
+        const localStorageArray = {'search' : saveSearch, 'cardsNoFilter' : saveCardsNoFileter, 'cardsFilter' : saveCardsNoFileter, 'shortFilmsCards': {}, 'btn' : false};
+        window.localStorage.setItem('saveFilms', JSON.stringify(localStorageArray) );
+      }
+
+}
 
 
  // Лайк и сохранение карточки
@@ -171,7 +279,7 @@ const handleSubmitSerach = (e) => {
   api.addNewCard(card)
   .then((saveCard) => {
   })
-  .catch((err) => console.error(err));
+  .catch((err) => err && ( console.error(err), setserverError(true), setMoviesMoreBtn(false) ) );
 }
 
  // Удаление карточки
@@ -179,12 +287,15 @@ const handleSubmitSerach = (e) => {
   api.deleteCard(card._id)
   .then((data) => {
     setSaveCards((results) => results.filter((c) => c._id !== card._id ? data : data - c));
+    setSaveCardsNoFileter((results) => results.filter((c) => c._id !== card._id ? data : data - c));
+    const localStorageArray = {'search' : saveSearch, 'cardsNoFilter' : saveCardsNoFileter, 'cardsFilter' : saveCardsNoFileter, 'shortFilmsCards': {}, 'btn' : tokenSaveFilms.btn};
+    window.localStorage.setItem('saveFilms', JSON.stringify(localStorageArray) );
   })
   .catch((err) => console.error(err));
 }
 
 
-  // Выход
+// Выход
 const logOut = () => {
   // Удаление Куки, localStorage при выходе
     auth.logOut()
@@ -202,7 +313,7 @@ const logOut = () => {
         <Route
           element={
             <>
-              <Header loggedIn={loggedIn} /> <Outlet />
+              <Header isAppMounted={isAppMounted} loggedIn={loggedIn} /> <Outlet />
             </>
           }
         >
@@ -226,40 +337,40 @@ const logOut = () => {
                 element={
                   <>
                     <ProtectedRoute
-                      token={token}
+                      isAppMounted={isAppMounted}
                       loggedIn={loggedIn}
                       element={
                         <UserContext.Provider value={currentUser}>
                           <Movies
                             searchForm={
                               <SearchForm
-                              handleSubmit={(e) => handleSubmitSerach(e)}
-                              handleChange={handleChange}
-                              values={values}
+                              handleSubmitSerach={(search) => handleSubmitSerach(search)}
                               shortFilmsAction={shortFilmsAction}
+                              token={tokenFilms}
+                              shortFilmsClick={shortFilmsClick}
                               />}
-
                               moviesCardList={
                               <MoviesCardList
-                              moviesCardFilter={cards
-                                ?.slice(0, roundedVisibleCardCount)
-                                .map((card) => (
-                                  <MoviesCardFilter
-                                        key={card.id}
-                                        card={card}
-                                        values={values.movies}
-                                        ShortFilmsClick={ShortFilmsClick}
-                                        moviesCard={
-                                        <MoviesCard
+                                serverError={serverError}
+                                isLoading={isLoading}
+                                moviesCardFilter={cards
+                                  ?.slice(0, roundedVisibleCardCount)
+                                  .map((card) => (
+                                    <MoviesCardFilter
+                                          key={card.id}
                                           card={card}
-                                          moviesLikeCardButton={() => handleAddCardSubmit(card)}
-                                        />}
-                                    />
-                                  ))}
-                              />
-                            }
+                                          values={values.movies}
+                                          moviesCard={
+                                          <MoviesCard
+                                            card={card}
+                                            moviesActionCardButton={() => handleAddCardSubmit(card)}
+                                          />}
+                                      />
+                                    ))}
+                                />
+                              }
                             moviesMoreButton={
-                              <MoviesMoreButton moviesMoreBtn={moviesMoreBtn} handleClick={handleClick} />
+                              <MoviesMoreButton moviesMoreBtn={moviesMoreBtn} handleClick={handleClick} values={values.movies}/>
                             }
                             footer={<Footer />}
                           />
@@ -274,32 +385,31 @@ const logOut = () => {
                 element={
                   <>
                     <ProtectedRoute
-                      token={token}
+                      isAppMounted={isAppMounted}
+                      loggedIn={loggedIn}
                       element={
                         <UserContext.Provider value={currentUser}>
                           <SavedMovies
                           searchForm={
                             <SearchForm
-                            handleSubmit={(e) => handleSubmitSerach(e)}
-                            handleChange={handleChange}
-                            values={values}
-                            shortFilmsAction={shortFilmsAction}
+                            handleSubmitSerach={(saveSearch) => handleSubmitSaveSerach(saveSearch)}
+                            shortFilmsAction={shortSaveFilmsAction}
+                            token={tokenSaveFilms}
+                            shortFilmsClick={shortSaveFilmsClick}
                             /> }
                             moviesCardList={
                               <MoviesCardList
-                                moviesCardFilter={saveCards
+                                moviesCardFilter={Array.from(saveCards)
                                   ?.slice(0, roundedVisibleCardCount)
                                   .map((card) => (
                                     <MoviesCardFilter
                                         key={card.nameRU}
                                         card={card}
-                                        values={values.movies}
-                                        ShortFilmsClick={ShortFilmsClick}
                                         moviesCard={
                                         <MoviesCard
                                           card={card}
-                                          moviesLikeCardButton={() => handleDeleteCardSubmit(card)}
-                                          disLikeBtnCard={disLikeBtnCard}
+                                          moviesActionCardButton={() => handleDeleteCardSubmit(card)}
+                                          disLikeBtnCard={handleDisLikeBtnCard}
                                         />}
                                     />
                                   ))}
@@ -319,7 +429,8 @@ const logOut = () => {
                 element={
                   <>
                     <ProtectedRoute
-                      token={token}
+                      isAppMounted={isAppMounted}
+                      loggedIn={loggedIn}
                       element={
                         <UserContext.Provider value={currentUser}>
                           <Profile

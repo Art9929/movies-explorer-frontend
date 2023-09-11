@@ -1,7 +1,7 @@
 import "./Header.css";
 import { useState, useEffect} from "react";
 
-function Header({loggedIn}) {
+function Header({isAppMounted, loggedIn}) {
 
   const [setPopupMenuActive, setPopupMenu] = useState("");
   const [setPopupMenuNavigateActive, setPopupMenuNavigate] = useState("");
@@ -41,12 +41,12 @@ function navigateMenu() {
   }, [])
 
   return (
-    <header className={`header ${loggedIn ? "header_theme_white" : "header_theme_gray"}`}>
+    <header className={`header ${isAppMounted && (loggedIn ? "header_theme_white" : "header_theme_gray")}`}>
         <div className={`header__menu ${toggleMenuPopup}`}>
           <div className="header__wrapper-logo">
             <a href="/" className="header__logo hover__button"> </a>
           </div>
-      {loggedIn ? (
+      {isAppMounted && (loggedIn ? (
         <div className="header__wrapper">
           <button
             type="button"
@@ -78,7 +78,8 @@ function navigateMenu() {
             </ul>
             <a href="/signin" className="header__text-enter">Войти</a>
           </nav>
-      )}
+      ))
+      }
       </div>
     </header>
   );

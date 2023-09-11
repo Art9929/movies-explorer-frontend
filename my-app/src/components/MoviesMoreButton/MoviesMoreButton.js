@@ -1,6 +1,7 @@
 import "./MoviesMoreButton.css";
 
-function MoviesMoreButton({moviesMoreBtn, handleClick}) {
+function MoviesMoreButton({moviesMoreBtn, handleClick, values}) {
+  if (values === "") return
   return (
     moviesMoreBtn === true &&
     <section className="movies-more-button">

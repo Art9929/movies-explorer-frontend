@@ -2,9 +2,8 @@ import React from 'react';
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ element: Component, ...props  }) => {
-
   return (
-    props.token ? Component : <Navigate to="/" replace/>
+    props.isAppMounted && (props.loggedIn ? Component : <Navigate to="/" replace/>)
 )}
 
 export default ProtectedRoute;

@@ -21,6 +21,10 @@
   }
 }
 
+.movies-card-list__error {
+  text-align: center;
+}
+
 
 /* Phone */
 @media (max-width: 450px) {

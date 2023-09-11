@@ -3,14 +3,14 @@ import { useState } from "react";
 
 function MoviesCard({
   card,
-  moviesLikeCardButton,
+  moviesActionCardButton,
   disLikeBtnCard
 }) {
 
 const [likeBtnCard, setlikeBtnCard] = useState(""); // Кнопка Лайка Карточки
 
 
-  // Получаем "непустые" карточки
+// Получаем "непустые" карточки
 if (card === false ) return
 
 // Так как картинки не храним на своем сервере, то подгружаем с внешнего
@@ -45,7 +45,7 @@ function handleLikeBtnCard() {
             type="submit"
             className={`movies-card__button ${likeBtnCard} ${disLikeBtnCard}`}
             // className="movies-card__button movies-card-active__button movies-card-delete__button"
-            onClick={() =>{ moviesLikeCardButton(); handleLikeBtnCard(); }}
+            onClick={() =>{ moviesActionCardButton(); handleLikeBtnCard(); }}
             >
             </button>
           <p className="movies-card__film-duration">{durationFilm(card.duration)}</p>

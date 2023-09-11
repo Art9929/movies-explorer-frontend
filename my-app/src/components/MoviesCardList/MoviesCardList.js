@@ -1,11 +1,22 @@
 import "./MoviesCardList.css";
 
-function MoviesCardList({moviesCardFilter}) {
-
+function MoviesCardList({ serverError, isLoading, moviesCardFilter }) {
   return (
-    <section className="movies-card-list">
-      {moviesCardFilter}
-    </section>
+    <>
+      {!moviesCardFilter && (
+        <h3 className="movies-card-list__error">Нужно ввести ключевое слово</h3>
+      )}
+      {isLoading ? (
+        <div>Загрузка фильмов...</div>
+      ) : serverError ? (
+        <h3 className="movies-card-list__error">
+          «Во время запроса произошла ошибка. Возможно, проблема с соединением
+          или сервер недоступен. Подождите немного и попробуйте ещё раз».
+        </h3>
+      ) : (
+        <section className="movies-card-list">{moviesCardFilter}</section>
+      )}
+    </>
   );
 }
 
