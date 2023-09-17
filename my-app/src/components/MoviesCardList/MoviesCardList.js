@@ -1,12 +1,13 @@
 import "./MoviesCardList.css";
 
-function MoviesCardList({ serverError, isLoading, moviesCardFilter }) {
+function MoviesCardList({ searchIsNull, serverError, isLoading, moviesCardFilter }) {
   return (
     <>
-      {!moviesCardFilter && (
+      {searchIsNull === false
+      ?
         <h3 className="movies-card-list__error">Нужно ввести ключевое слово</h3>
-      )}
-      {isLoading ? (
+      :
+      isLoading ? (
         <div>Загрузка фильмов...</div>
       ) : serverError ? (
         <h3 className="movies-card-list__error">

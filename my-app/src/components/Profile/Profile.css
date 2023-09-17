@@ -80,6 +80,13 @@
   line-height: normal;
 }
 
+.profile__success {
+  color: green;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: normal;
+}
+
 .profile__error_active {
   text-align: center;
   margin: auto 0 0 0;
@@ -115,8 +122,6 @@
     flex-direction: column;
     margin: 96px 0 0;
   }
-
-
 }
 
 /* Phone */

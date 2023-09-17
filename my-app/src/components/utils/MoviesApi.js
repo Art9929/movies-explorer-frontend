@@ -32,7 +32,7 @@ class Api {
       .then(res => this._response(res));
   }
 
-  // Добавление карточки на сервер &
+  // Добавление карточки на сервер
   addNewCard(item) {
     return fetch(`${this._url}/movies`, {
       method: 'POST',

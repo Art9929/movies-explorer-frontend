@@ -1,17 +1,19 @@
 import "./MoviesCard.css";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 
 function MoviesCard({
   card,
+  saveCards,
   moviesActionCardButton,
   disLikeBtnCard
 }) {
 
 const [likeBtnCard, setlikeBtnCard] = useState(""); // Кнопка Лайка Карточки
 
-
-// Получаем "непустые" карточки
-if (card === false ) return
+function handleLikeBtnCard() {
+  setlikeBtnCard(likeBtnCard => !likeBtnCard);
+}
+const toggleMenuPopup = likeBtnCard ? 'movies-card-active__button' : '';
 
 // Так как картинки не храним на своем сервере, то подгружаем с внешнего
 // Выводим урл на страницу "Фильмы" или на страницу "Сохранённые фильмы"
@@ -25,27 +27,43 @@ function durationFilm(duration) {
   return `${stringHours} ${stringMinutes}`.trim();
 }
 
-function handleLikeBtnCard() {
-  setlikeBtnCard("movies-card-active__button");
-}
 
-  return (
+function moviesDeleteCardButtoт() {
+  moviesActionCardButton()
+  // delete card.like;
+}
+// Проверяем на наличие лайков
+useEffect(() => {
+  if (saveCards) {
+    saveCards.forEach(saveCard => {
+      if (saveCard.movieId === card.id) setlikeBtnCard("movies-card-active__button");;
+    });
+  }
+  if (card._id) {
+    card.like = "like";
+  }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+
+return (
     <>
       <article className="movies-card__films">
-        <img
-          className="movies-card__film-img"
-          src={srcImg}
-          alt={card.nameRU}
-          lang="ru"
-        ></img>
+        <a className="movies-card__film-link" href={card.trailerLink} rel="nofollow" target="_blank">
+          <img
+            className="movies-card__film-img"
+            src={srcImg}
+            alt={card.nameRU}
+            lang="ru"
+          ></img>
+        </a>
         <div className="movies-card__name">
           <h3 className="movies-card__film-title">{card.nameRU}</h3>
           <button
             aria-label="Поиск"
             type="submit"
-            className={`movies-card__button ${likeBtnCard} ${disLikeBtnCard}`}
+            className={`movies-card__button ${toggleMenuPopup} ${disLikeBtnCard}`}
             // className="movies-card__button movies-card-active__button movies-card-delete__button"
-            onClick={() =>{ moviesActionCardButton(); handleLikeBtnCard(); }}
+            onClick={() =>{ moviesDeleteCardButtoт(); handleLikeBtnCard(); }}
             >
             </button>
           <p className="movies-card__film-duration">{durationFilm(card.duration)}</p>

@@ -11,6 +11,10 @@
   height: 100%;
 }
 
+.movies-card__film-link {
+  height: 100%;
+}
+
 .movies-card__name {
   display: grid;
   grid-template-columns: 80% 20%;

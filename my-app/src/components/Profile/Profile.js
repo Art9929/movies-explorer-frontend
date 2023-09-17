@@ -1,9 +1,51 @@
 import './Profile.css';
 import { useState, useEffect } from "react";
 
-function Profile({currentUser, handleSubmit, handleChange, values, errors, isValidForm, errorProfile, logOut}) {
+function Profile({currentUser, onUpdateUser,statusProfile, logOut}) {
 
-  // Изменение кнопки редактирования при нажатии
+  // Записываем данные в форму
+  const [name , setName] = useState("");
+  const [email , setEmail] = useState("");
+  const [isValid, setIsValid] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  function handleSubmit(e) {
+    // Запрещаем браузеру переходить по адресу формы
+    e.preventDefault();
+
+    // Функция. Передаём значения управляемых компонентов во внешний обработчик
+ onUpdateUser({
+      name,
+      email: email,
+    });
+    setIsValid(false)
+  }
+  function handleChangeName(e) {
+    const value = e.target.value;
+
+    const name = e.target.name;
+    setErrors({...errors, [name]: e.target.validationMessage });
+
+    setName(value);
+    currentUser.name !== value ? setIsValid(e.target.closest("form").checkValidity()) : setIsValid(false);
+  }
+
+  function handleChangeEmail(e) {
+    const value = e.target.value;
+
+    const name = e.target.name;
+    setErrors({...errors, [name]: e.target.validationMessage });
+
+    setEmail(value);
+    currentUser.email !== value ? setIsValid(e.target.closest("form").checkValidity()) : setIsValid(false);
+  }
+
+  useEffect(() => {
+    setName(currentUser.name);
+    setEmail(currentUser.email);
+  }, [currentUser]);
+
+    // Изменение кнопки редактирования при нажатии
   const [setEditProfileActive, setEditProfile] = useState("");
   function openEditMenu() {
     setEditProfile(setEditProfileActive => !setEditProfileActive);
@@ -15,8 +57,8 @@ function Profile({currentUser, handleSubmit, handleChange, values, errors, isVal
   const [isDisabledBtn, setIsDisabledBtn] = useState("disabled", "disabled");
 
   useEffect(() => {
-    if(isValidForm) {setisValidBtn(''); setIsDisabledBtn('')} else { setisValidBtn("profile__edit_disabled"); setIsDisabledBtn("disabled", "disabled") }
-  }, [isValidForm])
+    if (isValid) {setisValidBtn(''); setIsDisabledBtn('')} else { setisValidBtn("profile__edit_disabled"); setIsDisabledBtn("disabled", "disabled") }
+  }, [isValid])
 
   return (
     <main className='main'>
@@ -37,13 +79,13 @@ function Profile({currentUser, handleSubmit, handleChange, values, errors, isVal
             id="name"
             name="name"
             type="text"
-            placeholder={currentUser.name}
+            placeholder=""
             className="profile__input"
             minLength="2"
             maxLength="30"
             required
-            value={values.name || ""}
-            onChange={handleChange}
+            value={name || ""}
+            onChange={handleChangeName}
           />
         <span className="profile__error">{errors.name}</span>
         <div className="profile__line"></div>
@@ -54,19 +96,19 @@ function Profile({currentUser, handleSubmit, handleChange, values, errors, isVal
             id="email"
             name="email"
             type="email"
-            placeholder={currentUser.email}
+            placeholder=""
             className="profile__input"
             minLength="2"
             maxLength="30"
             required
-            value={values.email || ""}
-            onChange={handleChange}
+            value={email || ""}
+            onChange={handleChangeEmail}
           />
         <span className="profile__error">{errors.email}</span>
           { toggleMenuPopup === true &&
           <>
-            <span className={`profile__error profile__error_active ${errorProfile}`} >
-                При обновлении профиля произошла ошибка.
+            <span className={`profile__error_active ${statusProfile && statusProfile.class}`} >
+              {statusProfile && statusProfile.text}
             </span>
             <button
               aria-label="Сохранить"
