@@ -47,7 +47,7 @@ function App() {
   const [cards, setCards] = useState([]); // Фильмы со стороннего сервера
   const [search, setSearch] = useState(""); // Сохраняем фильмы для возврата значения setCards после фильтрации
   const [searchIsNull, setSearchIsNull] = useState(null); // Не введено ключевое слово в поиск
-  const [saveCards, setSaveCards] = useState([]); // Фильмы с Моего сервера
+  let [saveCards, setSaveCards] = useState([]); // Фильмы с Моего сервера
   const [saveCardsNoFileter, setSaveCardsNoFileter] = useState([]); // Неотфильтрованные фильмы с Моего сервера
   const [shortFilmsClick, setShortFilmsClick] = useState(null); // class checked для "Короткометражки для фильмов"
   const [shortSaveFilmsClick, setShortSaveFilmsClick] = useState(null); // class checked для "Короткометражки для сохраненных фильмов"
@@ -62,7 +62,7 @@ function App() {
   const handleDisLikeBtnCard = "movies-card-delete__button";
 
   const tokenFilms = JSON.parse(window.localStorage.getItem('films'))
-
+  saveCards = Array.from(saveCards);
 
 const handleProfileStatusSuccess =
 {
@@ -302,7 +302,6 @@ function handleAddCardSubmit(card, saveCard) {
   .catch((err) => console.error(err));
   }
 }
-
 
 // Выход
 const logOut = () => {

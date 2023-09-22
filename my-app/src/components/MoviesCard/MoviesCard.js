@@ -35,7 +35,7 @@ function moviesDeleteCardButtoт() {
 // Проверяем на наличие лайков
 useEffect(() => {
   if (saveCards) {
-    saveCards.forEach(saveCard => {
+    Array.from(saveCards).forEach(saveCard => {
       if (saveCard.movieId === card.id) setlikeBtnCard("movies-card-active__button");;
     });
   }
