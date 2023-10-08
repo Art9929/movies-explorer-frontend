@@ -39,7 +39,7 @@ import RenderCountCard from "../RenderCountCard";
 function App() {
   // functions
   const { values, handleChange, setValues, errors, isValid, setIsValid, resetForm} = useFormWithValidation();
-  const { roundedVisibleCardCount, handleClick, visibleCardCount } = RenderCountCard();
+  let { roundedVisibleCardCount, handleClick, visibleCardCount } = RenderCountCard();
   // useState
   const [loggedIn, setLoggedIn] = useState(null); // 3 разделения - null, false, true
   const [currentUser, setCurrentUser] = useState({});
@@ -47,8 +47,10 @@ function App() {
   const [cards, setCards] = useState([]); // Фильмы со стороннего сервера
   const [search, setSearch] = useState(""); // Сохраняем фильмы для возврата значения setCards после фильтрации
   const [searchIsNull, setSearchIsNull] = useState(null); // Не введено ключевое слово в поиск
+  const [searchIsNothingFound, setSearchIsNothingFound] = useState(null); // Ничего не найдено при поиске
   let [saveCards, setSaveCards] = useState([]); // Фильмы с Моего сервера
   const [saveCardsNoFileter, setSaveCardsNoFileter] = useState([]); // Неотфильтрованные фильмы с Моего сервера
+  const [saveShortFilmsCardsNoFilter, setSaveShortFilmsCardsNoFilter] = useState([]); // Неотфильтрованные сохраненные фильмы при нажитии на кнопку "Короткометражки"
   const [shortFilmsClick, setShortFilmsClick] = useState(null); // class checked для "Короткометражки для фильмов"
   const [shortSaveFilmsClick, setShortSaveFilmsClick] = useState(null); // class checked для "Короткометражки для сохраненных фильмов"
   const [moviesMoreBtn, setMoviesMoreBtn] = useState(null); // Кнопка "Ещё"
@@ -73,6 +75,7 @@ const handleProfileStatusSuccess =
 const handleProfileStatusError =
 {
    text : "При обновлении профиля произошла ошибка.",
+   textAuth : "Ошибка при вводе данных",
    class : "profile__display-block profile__error",
 }
 
@@ -111,10 +114,10 @@ const handleProfileStatusError =
               setShortFilmsClick(tokenFilms?.btn); // включаем фильтр явно
               setSearch(tokenFilms.search); // закладываем отфильтрованный список при условии наличия токена и вкл фильтра
               setMoviesMoreBtn(true)
+              setCountCards(tokenFilms.cardsFilter.length); // кнопка
             }
           })
           .catch((err) => console.error(err));
-
         }
 // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [loggedIn]);
@@ -130,7 +133,7 @@ const handleProfileStatusError =
 // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [visibleCardCount]);
 
-
+console.log(countCards);
   // Регистрация
   const handleSubmitRegistrate = (e) => {
     e.preventDefault();
@@ -141,7 +144,7 @@ const handleProfileStatusError =
           handleSubmitAuth(e) // Получаем токен | авторизовывемся
         }
       })
-      .catch((e) => console.log(e));
+      .catch((err) => { setstatusProfile(handleProfileStatusError); setIsValid(false); console.error(err) });
   };
 
 // Авторизация
@@ -159,9 +162,7 @@ const handleProfileStatusError =
           navigate("/movies", { replace: true });
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => { setstatusProfile(handleProfileStatusError); setIsValid(false); console.error(err) });
   };
 
 // Редактирование профиля
@@ -194,8 +195,10 @@ const handleSubmitSerach = (search) => {
       })
       .catch((err) => err && ( console.error(err), setserverError(true), setMoviesMoreBtn(false) ) )
       .finally(() => setIsLoading(false)) // прелоадер
-    } else {
+    } else if (shortFilmsClick === false){
       filter(search, tokenFilms.cardsNoFilter);
+    } else if (shortFilmsClick === true){
+      filter(search, tokenFilms.shortFilmsCardsNoFilter);
     }
 }}
 
@@ -206,11 +209,20 @@ function filter (search, cardsNoFilter) {
     const data = cardsNoFilter.filter(card =>
       card.nameRU.toLowerCase().trim().indexOf(searchCards) > -1 ||
       card.nameEN.toLowerCase().trim().indexOf(searchCards) > -1)
+
+      if (data.length === 0) return (setSearchIsNothingFound(false), setMoviesMoreBtn(false)); // Ничего не найдено
+
       setCards(data)
       setCountCards(data.length);
+      setSearchIsNothingFound(null);
   // Записываем результат в токен
-  const localStorageArray = {'search' : search, 'cardsNoFilter' : cardsNoFilter, 'cardsFilter' : data,   'shortFilmsCards': [], 'btn' : shortFilmsClick};
+  if (shortFilmsClick === true) {
+  const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'cardsFilter' : tokenFilms.cardsFilter, 'shortFilmsCardsNoFilter': tokenFilms.shortFilmsCardsNoFilter, 'shortFilmsCards': data, 'btn' : shortFilmsClick};
   window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
+} else {
+  const localStorageArray = {'search' : search, 'cardsNoFilter' : cardsNoFilter, 'cardsFilter' : data, 'shortFilmsCardsNoFilter': [], 'shortFilmsCards': [], 'btn' : shortFilmsClick};
+  window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
+}
 }
 
 // Короткометражки в Фильмах
@@ -221,7 +233,7 @@ const shortFilmsAction = () => {
         setCountCards(cards.length);
         setSearch(tokenFilms.search)
         setShortFilmsClick(false)
-        const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'cardsFilter' : tokenFilms.cardsFilter,  'shortFilmsCards': [], 'btn' : false};
+        const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'cardsFilter' : tokenFilms.cardsFilter,  'shortFilmsCardsNoFilter': [], 'shortFilmsCards': [], 'btn' : false};
         window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
     } else if (shortFilmsClick === false) {
       const data = tokenFilms.cardsFilter.filter(card => card.duration < 40)
@@ -230,7 +242,7 @@ const shortFilmsAction = () => {
       setSearch(tokenFilms.search)
       setShortFilmsClick(true)
       // записываем рзультат в jwt токен
-      const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'cardsFilter' : tokenFilms.cardsFilter,  'shortFilmsCards': data, 'btn' : true};
+      const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'cardsFilter' : tokenFilms.cardsFilter,  'shortFilmsCardsNoFilter': data, 'shortFilmsCards': data, 'btn' : true};
       window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
     }
   }
@@ -238,26 +250,33 @@ const shortFilmsAction = () => {
 
 // Поиск Сохраненного фильма
 const handleSubmitSaveSerach = (saveSearch) => {
-  if (saveSearch === "") setSearchIsNull(false);
-    if (saveSearch) {
-      // setSaveSearch(saveSearch)
-      const searchSaveCards = saveSearch.toLowerCase().trim();
-      try {
-        const data = saveCardsNoFileter.filter(card =>
-          card.nameRU.toLowerCase().trim().indexOf(searchSaveCards) > -1 ||
-          card.nameEN.toLowerCase().trim().indexOf(searchSaveCards) > -1)
-          setSaveCards(data)
-        }
-        catch (err) { console.error(err); setserverError(true); }
-        finally { setIsLoading(false); };
-}}
+  if (saveSearch === "") {return setSearchIsNull(false)};
+  if (saveSearch && shortSaveFilmsClick === true) {
+    return saveFilter(saveSearch, saveShortFilmsCardsNoFilter)
+  }
+  saveFilter(saveSearch, saveCardsNoFileter)
+}
 
+// Фильтр поиска сохраненного фильма
+function saveFilter (saveSearch, saveCardsNoFileter) {
+    setSearchIsNull(null)
+    const searchSaveCards = saveSearch.toLowerCase().trim();
+    try {
+      const data = saveCardsNoFileter.filter(card =>
+        card.nameRU.toLowerCase().trim().indexOf(searchSaveCards) > -1 ||
+        card.nameEN.toLowerCase().trim().indexOf(searchSaveCards) > -1)
+        setSaveCards(data)
+      }
+      catch (err) { console.error(err); setserverError(true); }
+      finally { setIsLoading(false); };
+}
 
 // Короткометражки в Сохраненных Фильмах
   const shortSaveFilmsAction = () => {
     if (saveCards && !shortSaveFilmsClick) {
         const data = saveCards.filter(card => card.duration < 40)
         setSaveCards(data)
+        setSaveShortFilmsCardsNoFilter(data) // для фильтрации при включённой кнопке "Короткометражки"
         setShortSaveFilmsClick(true)
       } else if (saveCards && shortSaveFilmsClick) {
         setSaveCards(saveCardsNoFileter)
@@ -266,7 +285,7 @@ const handleSubmitSaveSerach = (saveSearch) => {
 }
 
 // Лайк и сохранение карточки
-function handleAddCardSubmit(card, saveCard) {
+function handleAddCardSubmit(card) {
   let like = false
   // Преобразовываем json
   if (saveCards.length !== 0) {
@@ -296,8 +315,8 @@ function handleAddCardSubmit(card, saveCard) {
   // Удаление карточки
   api.deleteCard(card._id)
   .then((data) => {
-    setSaveCards((results) => results.filter((c) => c._id !== card._id ? data : data - c));
-    setSaveCardsNoFileter((results) => results.filter((c) => c._id !== card._id ? data : data - c));
+    setSaveCards((results) => Array.from(results).filter((c) => c._id !== card._id ? data : data - c));
+    setSaveCardsNoFileter((results) => Array.from(results).filter((c) => c._id !== card._id ? data : data - c));
   })
   .catch((err) => console.error(err));
   }
@@ -359,6 +378,7 @@ const logOut = () => {
                               />}
                               moviesCardList={
                               <MoviesCardList
+                                searchIsNothingFound={searchIsNothingFound}
                                 searchIsNull={searchIsNull}
                                 serverError={serverError}
                                 isLoading={isLoading}
@@ -408,6 +428,7 @@ const logOut = () => {
                                /> }
                             moviesCardList={
                               <MoviesCardList
+                                searchIsNothingFound={searchIsNothingFound}
                                 searchIsNull={searchIsNull}
                                 moviesCardFilter={Array.from(saveCards)
                                   .map((card) => (
@@ -470,6 +491,7 @@ const logOut = () => {
                 values={values}
                 errors={errors}
                 isValidForm={isValid}
+                statusProfile={statusProfile}
                 />
                 :
                 <Navigate to="/movies" replace />
@@ -488,6 +510,7 @@ const logOut = () => {
               values={values}
               errors={errors}
               isValidForm={isValid}
+              statusProfile={statusProfile}
               />
               :
               <Navigate to="/movies" replace />

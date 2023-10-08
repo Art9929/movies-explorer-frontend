@@ -1,7 +1,7 @@
 import EnterWithForm from "../EnterWithForm/EnterWithForm";
 import "./Register.css";
 
-function Register({handleChange, handleSubmit, values, errors, isValidForm}) {
+function Register({handleChange, handleSubmit, values, errors, isValidForm, statusProfile}) {
 
   return (
     <main className="main">
@@ -14,6 +14,7 @@ function Register({handleChange, handleSubmit, values, errors, isValidForm}) {
         textLink="Войти"
         handleSubmit={handleSubmit}
         isValidForm={isValidForm}
+        statusProfile={statusProfile}
       >
         <label className="register__label" htmlFor="name">
           Имя

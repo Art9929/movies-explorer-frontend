@@ -1,7 +1,7 @@
 import EnterWithForm from "../EnterWithForm/EnterWithForm";
 import "./Login.css";
 
-function Login({handleChange, handleSubmit, values, errors, isValidForm}) {
+function Login({handleChange, handleSubmit, values, errors, isValidForm, statusProfile}) {
 
   return (
     <main className="main">
@@ -14,6 +14,7 @@ function Login({handleChange, handleSubmit, values, errors, isValidForm}) {
         textLink="Регистрация"
         handleSubmit={handleSubmit}
         isValidForm={isValidForm}
+        statusProfile={statusProfile}
       >
           <label className="login__label" htmlFor="email">E-mail</label>
           <input

@@ -19,6 +19,7 @@ function SearchForm({handleSubmitSerach, shortFilmsAction, token, shortFilmsClic
 
   useEffect(() => {
     token && setMovies(token.search); // проверяем значение в input
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

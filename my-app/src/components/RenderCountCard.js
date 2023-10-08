@@ -2,7 +2,7 @@ import * as React from "react";
 import { useMediaQuery } from "./hooks/useMediaQuery";
 
 const LG_ROW_CARD_COUNT = 4;
-const MD_ROW_CARD_COUNT = 3;
+const MD_ROW_CARD_COUNT = 2;
 const SM_ROW_CARD_COUNT = 2;
 
 const LG_INITIAL_CARD_COUNT = 12;

@@ -108,7 +108,7 @@ function Profile({currentUser, onUpdateUser,statusProfile, logOut}) {
           { toggleMenuPopup === true &&
           <>
             <span className={`profile__error_active ${statusProfile && statusProfile.class}`} >
-              {statusProfile && statusProfile.text}
+              {statusProfile && statusProfile.textAuth}
             </span>
             <button
               aria-label="Сохранить"

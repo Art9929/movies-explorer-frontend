@@ -2,7 +2,7 @@ import "./EnterWithForm.css";
 import "../Header/Header.css";
 import { useState, useEffect} from "react";
 
-function EnterWithForm({ children, title, method, buttonText, text, link, textLink, handleSubmit, isValidForm}) {
+function EnterWithForm({ children, title, method, buttonText, text, link, textLink, handleSubmit, isValidForm, statusProfile}) {
 
   const [isValidBtn, setisValidBtn] = useState("enter-with-form__edit_disabled");
   const [isDisabledBtn, setIsDisabledBtn] = useState("disabled", "disabled");
@@ -26,6 +26,11 @@ function EnterWithForm({ children, title, method, buttonText, text, link, textLi
         noValidate
       >
         {children}
+
+      <span className={`profile__error_active ${statusProfile && statusProfile.class}`} >
+            {statusProfile && statusProfile.textAuth}
+      </span>
+
         <button
           aria-label={buttonText}
           type="submit"
@@ -35,7 +40,6 @@ function EnterWithForm({ children, title, method, buttonText, text, link, textLi
           {buttonText}
         </button>
       </form>
-
       <p className="enter-with-form__enter-text">
         {text}
         <a href={link} className="enter-with-form__enter hover__link">
