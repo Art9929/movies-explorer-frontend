@@ -57,8 +57,8 @@ class Api {
 
 // подключение к API
 const api = new Api({
-  baseUrl: 'http://localhost:4000',
-  // baseUrl: 'https://api.a-ryabcev-films.nomoreparties.co',
+  // baseUrl: 'http://localhost:4000',
+  baseUrl: 'https://api.a-ryabcev-films.nomoreparties.co',
   headers: {
     'Content-Type': 'application/json'
   }

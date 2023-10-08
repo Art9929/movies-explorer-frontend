@@ -1,5 +1,5 @@
-// export const BASE_URL = 'https://api.a-ryabcev-films.nomoreparties.co';
-export const BASE_URL = 'http://localhost:4000';
+export const BASE_URL = 'https://api.a-ryabcev-films.nomoreparties.co';
+// export const BASE_URL = 'http://localhost:4000';
 
 // Страница входа
 export const signup = (name, email, password) => {
