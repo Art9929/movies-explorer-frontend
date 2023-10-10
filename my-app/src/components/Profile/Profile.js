@@ -1,18 +1,21 @@
 import './Profile.css';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext  } from "react";
+import { UserContext } from "../contexts/CurrentUserContext"; // Контекст
 
-function Profile({currentUser, onUpdateUser,statusProfile, logOut}) {
+function Profile({onUpdateUser, statusProfile, logOut}) {
 
   // Записываем данные в форму
-  const [name , setName] = useState("");
-  const [email , setEmail] = useState("");
+  const currentUser = useContext(UserContext);
+  const [name, setName] = useState(currentUser.name);
+  const [email, setEmail] = useState(currentUser.email);
   const [isValid, setIsValid] = useState(false);
   const [errors, setErrors] = useState({});
 
   function handleSubmit(e) {
     // Запрещаем браузеру переходить по адресу формы
     e.preventDefault();
-
+    // блокируем кнопку, что бы не отправить форму повторно
+    setIsDisabledBtn("disabled", "disabled")
     // Функция. Передаём значения управляемых компонентов во внешний обработчик
  onUpdateUser({
       name,

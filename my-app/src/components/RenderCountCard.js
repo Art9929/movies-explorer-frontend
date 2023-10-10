@@ -2,12 +2,12 @@ import * as React from "react";
 import { useMediaQuery } from "./hooks/useMediaQuery";
 
 const LG_ROW_CARD_COUNT = 4;
-const MD_ROW_CARD_COUNT = 2;
+const MD_ROW_CARD_COUNT = 4;
 const SM_ROW_CARD_COUNT = 2;
 
-const LG_INITIAL_CARD_COUNT = 12;
-const MD_INITIAL_CARD_COUNT = 9;
-const SM_INITIAL_CARD_COUNT = 6;
+const LG_INITIAL_CARD_COUNT = 16;
+const MD_INITIAL_CARD_COUNT = 16;
+const SM_INITIAL_CARD_COUNT = 5;
 
 export default function RenderCountCard() {
 
@@ -41,9 +41,9 @@ export default function RenderCountCard() {
                v
   */
   const roundedVisibleCardCount =
-    Math.floor(visibleCardCount / cardColumnCount) * cardColumnCount;
+   visibleCardCount / cardColumnCount * cardColumnCount;
 
-  const handleClick = () => {
+   const handleClick = () => {
     calculateCardCount();
   };
 
@@ -55,9 +55,7 @@ export default function RenderCountCard() {
     if (isTablet) {
       return setVisibleCardCount(visibleCardCount + MD_ROW_CARD_COUNT);
     }
-
     setVisibleCardCount(visibleCardCount + SM_ROW_CARD_COUNT);
   };
-
-  return ( {roundedVisibleCardCount, handleClick, visibleCardCount} );
+  return ( {roundedVisibleCardCount, handleClick, visibleCardCount, setVisibleCardCount, initialCardCount} );
 };

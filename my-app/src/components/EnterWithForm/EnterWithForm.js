@@ -11,6 +11,15 @@ function EnterWithForm({ children, title, method, buttonText, text, link, textLi
     if(isValidForm) {setisValidBtn(''); setIsDisabledBtn('')} else { setisValidBtn("register__edit_disabled"); setIsDisabledBtn("disabled", "disabled") }
   }, [isValidForm])
 
+  function handleSubmitForm(e) {
+    // Запрещаем браузеру переходить по адресу формы
+    e.preventDefault();
+    // блокируем кнопку, что бы не отправить форму повторно
+    setIsDisabledBtn("disabled", "disabled")
+    // Функция. Передаём значения управляемых компонентов во внешний обработчик
+    handleSubmit()
+  }
+
   return (
     <section className="enter-with-form">
       <div className="enter-with-form__logo-position">
@@ -22,7 +31,7 @@ function EnterWithForm({ children, title, method, buttonText, text, link, textLi
         name="register"
         action="#"
         className="enter-with-form__form"
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmitForm}
         noValidate
       >
         {children}
