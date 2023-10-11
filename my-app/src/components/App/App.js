@@ -51,7 +51,7 @@ function App() {
   let [saveCards, setSaveCards] = useState([]); // Фильмы с Моего сервера
   const [saveCardsNoFileter, setSaveCardsNoFileter] = useState([]); // Неотфильтрованные фильмы с Моего сервера
   const [saveShortFilmsCardsNoFilter, setSaveShortFilmsCardsNoFilter] = useState([]); // Неотфильтрованные сохраненные фильмы при нажитии на кнопку "Короткометражки"
-  const [shortFilmsClick, setShortFilmsClick] = useState(null); // class checked для "Короткометражки для фильмов"
+  const [shortFilmsClick, setShortFilmsClick] = useState(false); // class checked для "Короткометражки для фильмов"
   const [shortSaveFilmsClick, setShortSaveFilmsClick] = useState(null); // class checked для "Короткометражки для сохраненных фильмов"
   const [moviesMoreBtn, setMoviesMoreBtn] = useState(null); // Кнопка "Ещё"
   const [statusProfile, setstatusProfile] = useState(null); // Ошибка обновления профиля
@@ -186,16 +186,14 @@ const handleSubmitSerach = (search) => {
       .then((cards) => {
         setSearchIsNull(null)
         setCards(cards)
-        setShortFilmsClick(false) // включаем кнопку Короткометражек
+        // setShortFilmsClick(false) // включаем кнопку Короткометражек
         const cardsNoFilter = cards;
         filter(search, cardsNoFilter);
       })
       .catch((err) => err && ( console.error(err), setserverError(true), setMoviesMoreBtn(false) ) )
       .finally(() => setIsLoading(false)) // прелоадер
-    } else if (shortFilmsClick === false){
+    } else {
       filter(search, tokenFilms.cardsNoFilter);
-    } else if (shortFilmsClick === true){
-      filter(search, tokenFilms.shortFilmsCardsNoFilter);
     }
 }}
 
@@ -204,46 +202,49 @@ function filter (search, cardsNoFilter) {
   setVisibleCardCount(initialCardCount) // отображение начального количества карточек при поиске
   const searchCards = search.toLowerCase().trim();
   setSearchIsNull(null)
-    const data = cardsNoFilter.filter(card =>
+    let data = cardsNoFilter.filter(card =>
       card.nameRU.toLowerCase().trim().indexOf(searchCards) > -1 ||
       card.nameEN.toLowerCase().trim().indexOf(searchCards) > -1)
 
       if (data.length === 0) return (setSearchIsNothingFound(false), setMoviesMoreBtn(false)); // Ничего не найдено
 
+      if (shortFilmsClick === true) {
+        const shortFilmsCards = data.filter(card => card.duration < 40)
+        const localStorageArray = {'search' : search, 'cardsNoFilter' : cardsNoFilter, 'cardsFilter' : data, 'shortFilmsCards': shortFilmsCards, 'btn' : shortFilmsClick};
+        window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
+        data = shortFilmsCards; // Изменяем data на отфильтрованные карточки
+      }
       setCards(data)
       setCountCards(data.length);
       setSearchIsNothingFound(null);
   // Записываем результат в токен
-  if (shortFilmsClick === true) {
-  const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'cardsFilter' : tokenFilms.cardsFilter, 'shortFilmsCardsNoFilter': tokenFilms.shortFilmsCardsNoFilter, 'shortFilmsCards': data, 'btn' : shortFilmsClick};
-  window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
-} else {
-  const localStorageArray = {'search' : search, 'cardsNoFilter' : cardsNoFilter, 'cardsFilter' : data, 'shortFilmsCardsNoFilter': [], 'shortFilmsCards': [], 'btn' : shortFilmsClick};
-  window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
-}
+      if (shortFilmsClick === false) {
+        const localStorageArray = {'search' : search, 'cardsNoFilter' : cardsNoFilter, 'cardsFilter' : data, 'shortFilmsCards': [], 'btn' : shortFilmsClick};
+        window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
+      }
 }
 
 // Короткометражки в Фильмах
 const shortFilmsAction = () => {
-  if (tokenFilms) {
-    if (shortFilmsClick === true) {
+  if (shortFilmsClick === true) {
+      if (!tokenFilms) { return setShortFilmsClick(false) }
         setCards(tokenFilms.cardsFilter) // возвращаем исходное значение карточек через cardsFilter
         setCountCards(cards.length);
         setSearch(tokenFilms.search)
         setShortFilmsClick(false)
-        const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'cardsFilter' : tokenFilms.cardsFilter,  'shortFilmsCardsNoFilter': [], 'shortFilmsCards': [], 'btn' : false};
+        const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'cardsFilter' : tokenFilms.cardsFilter, 'shortFilmsCards': [], 'btn' : false};
         window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
     } else if (shortFilmsClick === false) {
+      if (!tokenFilms) { return setShortFilmsClick(true) }
       const data = tokenFilms.cardsFilter.filter(card => card.duration < 40)
       setCards(data)
       setCountCards(data.length); // Для кнопки "Ещё"
       setSearch(tokenFilms.search)
       setShortFilmsClick(true)
       // записываем рзультат в jwt токен
-      const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'cardsFilter' : tokenFilms.cardsFilter,  'shortFilmsCardsNoFilter': data, 'shortFilmsCards': data, 'btn' : true};
+      const localStorageArray = {'search' : search, 'cardsNoFilter' : tokenFilms.cardsNoFilter, 'cardsFilter' : tokenFilms.cardsFilter, 'shortFilmsCards': data, 'btn' : true};
       window.localStorage.setItem('films', JSON.stringify(localStorageArray) )
     }
-  }
 }
 
 // Поиск Сохраненного фильма
@@ -408,7 +409,6 @@ const logOut = () => {
             <Route
               path="/savemovies"
               element={
-                <>
                 <ProtectedRoute
                   isAppMounted={isAppMounted}
                   loggedIn={loggedIn}
@@ -443,30 +443,27 @@ const logOut = () => {
                       />
                     }
                   />
-                </>
               }
             />
 
             <Route
               path="/profile"
               element={
-                <>
-                  <ProtectedRoute
-                    isAppMounted={isAppMounted}
-                    loggedIn={loggedIn}
-                    element={
-                      <UserContext.Provider value={currentUser}>
-                        <Profile
-                          handleChange={(e) => handleChange(e)}
-                          onUpdateUser={(info) => handleUpdateUser(info)}
-                          errors={errors}
-                          logOut={logOut}
-                          statusProfile={statusProfile}
-                        />
-                      </UserContext.Provider>
-                    }
-                  />
-                </>
+                <ProtectedRoute
+                  isAppMounted={isAppMounted}
+                  loggedIn={loggedIn}
+                  element={
+                    <UserContext.Provider value={currentUser}>
+                      <Profile
+                        handleChange={(e) => handleChange(e)}
+                        onUpdateUser={(info) => handleUpdateUser(info)}
+                        errors={errors}
+                        logOut={logOut}
+                        statusProfile={statusProfile}
+                      />
+                    </UserContext.Provider>
+                  }
+                />
               }
             />
         </Route>{/*header*/}

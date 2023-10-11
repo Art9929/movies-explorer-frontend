@@ -7,8 +7,7 @@
 }
 
 /* Tablet */
-
-@media (max-width: 768px) {
+@media (max-width: 481px) {
   .movies-card-list {
     padding: 70px 30px 30px;
     grid-template-columns: repeat(1, 1fr);

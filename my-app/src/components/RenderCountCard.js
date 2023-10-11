@@ -12,7 +12,7 @@ const SM_INITIAL_CARD_COUNT = 5;
 export default function RenderCountCard() {
 
   const isDesktop = useMediaQuery("(min-width: 1280px)");
-  const isTablet = useMediaQuery("(min-width: 768px)");
+  const isTablet = useMediaQuery("(min-width: 481px)");
 
   const cardColumnCount = isDesktop
     ? LG_ROW_CARD_COUNT
