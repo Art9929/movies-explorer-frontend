@@ -3,27 +3,34 @@ import { useMediaQuery } from "./hooks/useMediaQuery";
 
 const LG_ROW_CARD_COUNT = 4;
 const MD_ROW_CARD_COUNT = 4;
+const MDG_ROW_CARD_COUNT = 2;
 const SM_ROW_CARD_COUNT = 2;
 
 const LG_INITIAL_CARD_COUNT = 16;
 const MD_INITIAL_CARD_COUNT = 16;
+const MDG_INITIAL_CARD_COUNT = 8;
 const SM_INITIAL_CARD_COUNT = 5;
 
 export default function RenderCountCard() {
 
   const isDesktop = useMediaQuery("(min-width: 1280px)");
-  const isTablet = useMediaQuery("(min-width: 481px)");
+  const isTablet = useMediaQuery("(min-width: 650px)");
+  const isTabletGorisint = useMediaQuery("(min-width: 481px)");
 
   const cardColumnCount = isDesktop
     ? LG_ROW_CARD_COUNT
     : isTablet
     ? MD_ROW_CARD_COUNT
+    : isTabletGorisint
+    ? MDG_ROW_CARD_COUNT
     : SM_ROW_CARD_COUNT;
 
   const initialCardCount = isDesktop
     ? LG_INITIAL_CARD_COUNT
     : isTablet
     ? MD_INITIAL_CARD_COUNT
+    : isTabletGorisint
+    ? MDG_INITIAL_CARD_COUNT
     : SM_INITIAL_CARD_COUNT;
 
   const [visibleCardCount, setVisibleCardCount] = React.useState(
