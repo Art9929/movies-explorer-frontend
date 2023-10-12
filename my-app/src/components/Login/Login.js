@@ -1,24 +1,22 @@
 import EnterWithForm from "../EnterWithForm/EnterWithForm";
 import "./Login.css";
 
-function Login() {
-  function handleSubmit(e) {
-    // Запрещаем браузеру переходить по адресу формы
-    e.preventDefault();
-  }
+function Login({handleChange, handleSubmit, values, errors, isValidForm, statusProfile}) {
 
   return (
     <main className="main">
       <EnterWithForm
         title="Рады видеть!"
         method="post"
-        onSubmit={handleSubmit}
         buttonText="Войти"
         text="Ещё не зарегистрированы?"
         link="/signup"
         textLink="Регистрация"
+        handleSubmit={handleSubmit}
+        isValidForm={isValidForm}
+        statusProfile={statusProfile}
       >
-          <label className="login__label" for="email">E-mail</label>
+          <label className="login__label" htmlFor="email">E-mail</label>
           <input
             id="email"
             name="email"
@@ -28,18 +26,24 @@ function Login() {
             minLength="2"
             maxLength="30"
             required
+            value={values.email || ""}
+            onChange={handleChange}
           />
-          <span className="login__error"></span>
-          <label className="login__label" for="password">Пароль</label>
+          <span className="login__error">{errors.email}</span>
+          <label className="login__label" htmlFor="password">Пароль</label>
           <input
             id="password"
             name="password"
             type="password"
             placeholder="Пароль"
             className="login__input"
+            minLength="6"
+            maxLength="30"
             required
+            value={values.password || ""}
+            onChange={handleChange}
           />
-          <span className="login__error"></span>
+          <span className="login__error">{errors.password}</span>
       </EnterWithForm>
     </main>
   );

@@ -10,4 +10,4 @@
 /* hover */
 @import url(./../blocks/hover/hover.css);
 @import url(./../blocks/hover/__button/hover__button.css);
-@import url(./../blocks/hover/__link-blue/hover__link-blue.css);
+@import url(./../blocks/hover/__link/hover__link.css);

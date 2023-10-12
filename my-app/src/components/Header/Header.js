@@ -1,7 +1,7 @@
 import "./Header.css";
 import { useState, useEffect} from "react";
 
-function Header({loggedIn}) {
+function Header({isAppMounted, loggedIn}) {
 
   const [setPopupMenuActive, setPopupMenu] = useState("");
   const [setPopupMenuNavigateActive, setPopupMenuNavigate] = useState("");
@@ -41,12 +41,12 @@ function navigateMenu() {
   }, [])
 
   return (
-    <header className={`header ${loggedIn ? "header_theme_white" : "header_theme_gray"}`}>
+    <header className={`header ${isAppMounted && (loggedIn ? "header_theme_white" : "header_theme_gray")}`}>
         <div className={`header__menu ${toggleMenuPopup}`}>
           <div className="header__wrapper-logo">
-            <a href="/" className="header__logo"></a>
+            <a href="/" className="header__logo hover__button"> </a>
           </div>
-      {loggedIn ? (
+      {isAppMounted && (loggedIn ? (
         <div className="header__wrapper">
           <button
             type="button"
@@ -57,28 +57,29 @@ function navigateMenu() {
           <nav className={`header__nav ${toggleMenuNavigatePopup}`}>
               <ul className="header__list">
               <li className="header__text header__text_active">
-                  <a className={`header__link ${setMainLinkHighlightActive}`} href="/">{"Главная"}</a>
+                  <a className={`header__link hover__link ${setMainLinkHighlightActive}`} href="/">{"Главная"}</a>
                 </li>
                 <li className="header__text">
-                  <a className={`header__link ${setMoviesLinkHighlightActive}`} href="/movies">{"Фильмы"}</a>
+                  <a className={`header__link hover__link ${setMoviesLinkHighlightActive}`} href="/movies">{"Фильмы"}</a>
                 </li>
                 <li className="header__text">
-                  <a className={`header__link ${setSaveMoviesLinkHighlightActive}`} href="/savemovies">{"Сохранённые фильмы"}</a>
+                  <a className={`header__link hover__link ${setSaveMoviesLinkHighlightActive}`} href="/savemovies">{"Сохранённые фильмы"}</a>
                 </li>
               </ul>
-              <a href='/profile' className="header__account">{"Аккаунт"}</a>
+              <a href='/profile' className="header__account hover__button">{"Аккаунт"}</a>
             </nav>
           </div>
       ) : (
           <nav className="header__nav-main">
             <ul className="header__list">
               <li className="header__text header__text-main">
-                <a className="header__link" href="/signup">{"Регистрация"}</a>
+                <a className="header__link hover__link" href="/signup">{"Регистрация"}</a>
               </li>
             </ul>
             <a href="/signin" className="header__text-enter">Войти</a>
           </nav>
-      )}
+      ))
+      }
       </div>
     </header>
   );

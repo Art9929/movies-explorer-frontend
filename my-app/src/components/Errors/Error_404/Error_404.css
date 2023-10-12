@@ -15,7 +15,6 @@
   font-size: 140px;
   font-weight: 400;
   box-sizing: border-box;
-  font-family: Inter;
 }
 
 .error-404__subtitle {
@@ -26,7 +25,6 @@
   font-weight: 400;
   box-sizing: border-box;
   margin-top: 9px;
-  font-family: Inter;
 }
 
 .error-404__back {
@@ -39,7 +37,6 @@
   box-sizing: border-box;
   position: absolute;
   top: calc(100vh - 60px);
-  font-family: Inter;
 }
 
 /* Tablet */
