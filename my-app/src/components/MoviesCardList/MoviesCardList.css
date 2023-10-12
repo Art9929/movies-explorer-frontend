@@ -7,6 +7,18 @@
 }
 
 /* Tablet */
+@media (max-width: 650px) {
+  .movies-card-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .movies-card-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 481px) {
   .movies-card-list {
     padding: 70px 30px 30px;

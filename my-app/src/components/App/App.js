@@ -334,7 +334,7 @@ const logOut = () => {
   }
 
   return (
-    <div className="App">
+    <>
       <Routes>
         <Route
           element={
@@ -360,50 +360,48 @@ const logOut = () => {
             <Route
               path="/movies"
               element={
-                <>
-                  <ProtectedRoute
-                    isAppMounted={isAppMounted}
-                    loggedIn={loggedIn}
-                    element={
-                      <Movies
-                        searchForm={
-                          <SearchForm
-                          handleSubmitSerach={(search) => handleSubmitSerach(search)}
-                          shortFilmsAction={shortFilmsAction}
-                          token={tokenFilms}
-                          shortFilmsClick={shortFilmsClick}
-                          />}
-                          moviesCardList={
-                          <MoviesCardList
-                            searchIsNothingFound={searchIsNothingFound}
-                            searchIsNull={searchIsNull}
-                            serverError={serverError}
-                            isLoading={isLoading}
-                            moviesCardFilter={cards
-                              ?.slice(0, roundedVisibleCardCount)
-                              .map((card) => (
-                                <MoviesCardFilter
-                                      key={card.id}
+                <ProtectedRoute
+                  isAppMounted={isAppMounted}
+                  loggedIn={loggedIn}
+                  element={
+                    <Movies
+                      searchForm={
+                        <SearchForm
+                        handleSubmitSerach={(search) => handleSubmitSerach(search)}
+                        shortFilmsAction={shortFilmsAction}
+                        token={tokenFilms}
+                        shortFilmsClick={shortFilmsClick}
+                        />}
+                        moviesCardList={
+                        <MoviesCardList
+                          searchIsNothingFound={searchIsNothingFound}
+                          searchIsNull={searchIsNull}
+                          serverError={serverError}
+                          isLoading={isLoading}
+                          moviesCardFilter={cards
+                            ?.slice(0, roundedVisibleCardCount)
+                            .map((card) => (
+                              <MoviesCardFilter
+                                    key={card.id}
+                                    card={card}
+                                    values={values.movies}
+                                    moviesCard={
+                                    <MoviesCard
                                       card={card}
-                                      values={values.movies}
-                                      moviesCard={
-                                      <MoviesCard
-                                        card={card}
-                                        saveCards={saveCards}
-                                        moviesActionCardButton={(saveCard) => handleAddCardSubmit(card, saveCard)}
-                                      />}
-                                  />
-                                ))}
-                            />
-                          }
-                        moviesMoreButton={
-                          <MoviesMoreButton moviesMoreBtn={moviesMoreBtn} handleClick={handleClick} values={values.movies}/>
+                                      saveCards={saveCards}
+                                      moviesActionCardButton={(saveCard) => handleAddCardSubmit(card, saveCard)}
+                                    />}
+                                />
+                              ))}
+                          />
                         }
-                        footer={<Footer />}
-                      />
-                    }
-                  />
-                </>
+                      moviesMoreButton={
+                        <MoviesMoreButton moviesMoreBtn={moviesMoreBtn} handleClick={handleClick} values={values.movies}/>
+                      }
+                      footer={<Footer />}
+                    />
+                  }
+                />
               }
             />
             <Route
@@ -508,7 +506,7 @@ const logOut = () => {
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       {/*Routes*/}
-    </div> // App
+    </> // App
   );
 }
 
